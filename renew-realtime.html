@@ -1459,38 +1459,37 @@
     };
   }
   async function fetchMetaMonthly() {
-    // Meta's `time_increment=monthly` is unreliable across versions — it sometimes
-    // collapses everything to a single bucket. Safer approach: fire one query per month.
+    // SECUENCIAL (no parallel): evita rate-limit + permite log puntual de fallas
     const now = new Date();
-    const tasks = [];
+    const results = [];
     for (let i = CONFIG.MONTHLY_LOOKBACK - 1; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const since = d.toISOString().slice(0, 10);
-      // end-of-month (or today if this is current month, to avoid querying future days)
       const nextMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0);
       const isCurrentMonth = (i === 0);
       const untilDate = isCurrentMonth ? now : nextMonth;
       const until = untilDate.toISOString().slice(0, 10);
       const monthKey = since.slice(0, 7);
-      tasks.push((async () => {
+      try {
         const url = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
         url.searchParams.set('fields', 'spend,actions');
         url.searchParams.set('time_range', JSON.stringify({ since, until }));
         url.searchParams.set('access_token', '__PROXY__');
-        const res = await fetch(url).then(r => r.json()).catch(() => ({ data: [] }));
+        const res = await fetch(url).then(r => r.json());
+        if (res?.error) {
+          console.warn('[Meta Monthly]', monthKey, 'API error:', res.error.message);
+        }
         const row = (res?.data || [])[0] || {};
         const conv = resultsFromActions(row.actions);
         const spend = parseFloat(row.spend || 0);
-        return {
-          month: monthKey,
-          spend,
-          conversions: conv,
-          cpa: conv > 0 ? spend / conv : 0
-        };
-      })());
+        results.push({ month: monthKey, spend, conversions: conv, cpa: conv > 0 ? spend / conv : 0 });
+      } catch (e) {
+        console.warn('[Meta Monthly]', monthKey, 'fetch threw:', e.message);
+        results.push({ month: monthKey, spend: 0, conversions: 0, cpa: 0 });
+      }
     }
-    const results = await Promise.all(tasks);
-    return results.sort((a, b) => a.month.localeCompare(b.month));
+    console.log('[Meta Monthly] resultado final:', results);
+    return results;
   }
   async function fetchGoogleMonthly() {
     const dr = monthlyDateRange();
@@ -1843,7 +1842,8 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v4 (camelCase + String IDs)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v5 (meta-monthly-sequential)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
+
