@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Renew Financial · Reporte en Tiempo Real · Pointer</title>
+  <title>Renew Financial · Real-Time Report · Pointer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -351,25 +351,25 @@
       </div>
       <div class="live-status" id="liveStatus">
         <span class="live-dot"></span>
-        <span id="liveStatusText">Pausado</span>
+        <span id="liveStatusText">Paused</span>
       </div>
     </div>
 
     <!-- Report title -->
     <div class="report-title">RENEW FINANCIAL</div>
-    <div class="report-sub">Reporte de performance en tiempo real · Meta Ads + Google Ads</div>
+    <div class="report-sub">Real-time performance report · Meta Ads + Google Ads</div>
 
     <!-- Controls -->
     <div class="controls">
       <div class="period-group" id="periodGroup">
-        <button class="period-btn" data-period="today">Hoy</button>
-        <button class="period-btn active" data-period="7d">7 días</button>
-        <button class="period-btn" data-period="month">Mes actual</button>
+        <button class="period-btn" data-period="today">Today</button>
+        <button class="period-btn active" data-period="7d">7 days</button>
+        <button class="period-btn" data-period="month">Current month</button>
       </div>
-      <button class="ctrl-btn" id="liveBtn">🔴 Activar EN VIVO</button>
-      <button class="ctrl-btn" id="refreshBtn">🔄 Actualizar</button>
+      <button class="ctrl-btn" id="liveBtn">🔴 Go LIVE</button>
+      <button class="ctrl-btn" id="refreshBtn">🔄 Refresh</button>
       <div class="ctrl-spacer"></div>
-      <div class="last-update" id="lastUpdate">Esperando primera carga…</div>
+      <div class="last-update" id="lastUpdate">Waiting for first load…</div>
     </div>
 
     <!-- Tabs -->
@@ -382,28 +382,28 @@
     <!-- TOTAL Tab -->
     <div class="tab-content active" id="tab-total">
       <div id="total-content">
-        <div class="loading"><span class="spinner"></span>Cargando datos en vivo…</div>
+        <div class="loading"><span class="spinner"></span>Loading live data…</div>
       </div>
     </div>
 
     <!-- META Tab -->
     <div class="tab-content" id="tab-meta">
       <div id="meta-content">
-        <div class="loading"><span class="spinner"></span>Cargando Meta Ads…</div>
+        <div class="loading"><span class="spinner"></span>Loading Meta Ads…</div>
       </div>
     </div>
 
     <!-- GOOGLE Tab -->
     <div class="tab-content" id="tab-google">
       <div id="google-content">
-        <div class="loading"><span class="spinner"></span>Cargando Google Ads…</div>
+        <div class="loading"><span class="spinner"></span>Loading Google Ads…</div>
       </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-      Dashboard generado por <span class="accent">POINTER</span> · Datos en tiempo real desde Meta Ads y Google Ads<br/>
-      Auto-actualización cada 5 min cuando "EN VIVO" está activo · Última actualización: <span id="footerUpdate">—</span>
+      Dashboard powered by <span class="accent">POINTER</span> · Real-time data from Meta Ads and Google Ads<br/>
+      Auto-refresh every 5 min when "LIVE" is active · Last update: <span id="footerUpdate">—</span>
     </div>
 
   </div>
@@ -421,7 +421,7 @@
     LOCALE:     'en-US',
     AUTOREFRESH_MS: 5 * 60 * 1000,  // 5 min
     MONTHLY_LOOKBACK: 12,            // months of evolution charts (fixed, independent of period selector)
-    // Renew Financial-specific conversion event = "Registro completado"
+    // Renew Financial-specific conversion event = "Completed Registration"
     // Meta returns multiple action_type variants depending on attribution path;
     // pick the MAX (different paths may report independently).
     META_CONVERSION_TYPES: [
@@ -495,7 +495,7 @@
     const m = actions.find(a => a.action_type === type);
     return m ? parseFloat(m.value) : 0;
   }
-  // Renew Financial conversion = "Registro completado" (complete_registration).
+  // Renew Financial conversion = "Completed Registration" (complete_registration).
   // Meta reports the same conversion under multiple action_type variants depending
   // on attribution path; take the MAX (never sum — avoids double-count).
   function resultsFromActions(actions) {
@@ -692,32 +692,32 @@
     const html = `
       ${errs.length ? `<div class="error" style="margin-bottom:16px;">⚠ ${errs.join(' · ')}</div>` : ''}
       <div class="kpi-grid">
-        ${kpiCard('Inversión total', fmtMoney(totSpend), `Meta ${fmtMoney(m.spend || 0)} · Google ${fmtMoney(g.spend || 0)}`, true)}
-        ${kpiCard('Conversiones totales', fmtNum(totResults), `Meta ${fmtNum(m.results || 0)} · Google ${fmtNum(g.conversions || 0)}`, true)}
-        ${kpiCard('Costo / conversión', avgCpr > 0 ? fmtMoney(avgCpr) : '—', 'Inversión total ÷ Conversiones totales', true)}
+        ${kpiCard('Total spend', fmtMoney(totSpend), `Meta ${fmtMoney(m.spend || 0)} · Google ${fmtMoney(g.spend || 0)}`, true)}
+        ${kpiCard('Total conversions', fmtNum(totResults), `Meta ${fmtNum(m.results || 0)} · Google ${fmtNum(g.conversions || 0)}`, true)}
+        ${kpiCard('Cost / conversion', avgCpr > 0 ? fmtMoney(avgCpr) : '—', 'Total spend ÷ Total conversions', true)}
       </div>
-      <div class="section-header">DETALLE POR PLATAFORMA</div>
+      <div class="section-header">BREAKDOWN BY PLATFORM</div>
       <div class="kpi-grid">
-        ${kpiCard('🟦 Meta · Inversión', fmtMoney(m.spend || 0), `${fmtNum(m.impressions || 0)} impresiones`)}
+        ${kpiCard('🟦 Meta · Spend', fmtMoney(m.spend || 0), `${fmtNum(m.impressions || 0)} impressions`)}
         ${kpiCard('🟦 Meta · Clicks', fmtNum(m.clicks || 0), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
-        ${kpiCard('🟦 Meta · Conversiones', fmtNum(m.results || 0), m.cpr > 0 ? 'C/Resultado ' + fmtMoney(m.cpr) : '—')}
-        ${kpiCard('🟢 Google · Inversión', fmtMoney(g.spend || 0), `${fmtNum(g.impressions || 0)} impresiones`)}
+        ${kpiCard('🟦 Meta · Conversions', fmtNum(m.results || 0), m.cpr > 0 ? 'Cost/Result ' + fmtMoney(m.cpr) : '—')}
+        ${kpiCard('🟢 Google · Spend', fmtMoney(g.spend || 0), `${fmtNum(g.impressions || 0)} impressions`)}
         ${kpiCard('🟢 Google · Clicks', fmtNum(g.clicks || 0), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
-        ${kpiCard('🟢 Google · Conversiones', fmtNum(g.conversions || 0), g.cpa > 0 ? 'CPA ' + fmtMoney(g.cpa) : '—')}
+        ${kpiCard('🟢 Google · Conversions', fmtNum(g.conversions || 0), g.cpa > 0 ? 'CPA ' + fmtMoney(g.cpa) : '—')}
       </div>
-      <div class="section-header">REPARTO DE INVERSIÓN</div>
+      <div class="section-header">SPEND DISTRIBUTION</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Inversión por plataforma</div>
+          <div class="chart-title">Spend by platform</div>
           <div class="chart-canvas"><canvas id="chart-total-spend"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Conversiones por plataforma</div>
+          <div class="chart-title">Conversions by platform</div>
           <div class="chart-canvas"><canvas id="chart-total-conv"></canvas></div>
         </div>
       </div>
       <div style="text-align:center;font-size:10.5px;color:var(--gray);margin-top:6px;">
-        Período: ${dr.since} → ${dr.until} · Moneda: ${CONFIG.CURRENCY}
+        Period: ${dr.since} → ${dr.until} · Currency: ${CONFIG.CURRENCY}
       </div>
     `;
     document.getElementById('total-content').innerHTML = html;
@@ -825,52 +825,52 @@
 
     document.getElementById('meta-content').innerHTML = `
       <div class="kpi-grid">
-        ${kpiCard('Inversión', fmtMoney(m.spend), `Período ${dr.since} → ${dr.until}`, true)}
-        ${kpiCard('Impresiones', fmtNum(m.impressions), `Alcance ${fmtNum(m.reach || 0)}`)}
+        ${kpiCard('Spend', fmtMoney(m.spend), `Period ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('Impressions', fmtNum(m.impressions), `Reach ${fmtNum(m.reach || 0)}`)}
         ${kpiCard('Clicks', fmtNum(m.clicks), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
-        ${kpiCard('CPM', fmtMoney(m.cpm || 0), `Frecuencia ${(m.frequency || 0).toFixed(2)}x`)}
-        ${kpiCard('Conversiones', fmtNum(m.results || 0), 'Registros completados')}
-        ${kpiCard('Costo / Resultado', m.cpr > 0 ? fmtMoney(m.cpr) : '—', 'Costo por registro')}
+        ${kpiCard('CPM', fmtMoney(m.cpm || 0), `Frequency ${(m.frequency || 0).toFixed(2)}x`)}
+        ${kpiCard('Conversions', fmtNum(m.results || 0), 'Completed registrations')}
+        ${kpiCard('Cost / Result', m.cpr > 0 ? fmtMoney(m.cpr) : '—', 'Cost per registration')}
       </div>
-      <div class="section-header">EVOLUCIÓN MENSUAL · ÚLTIMOS ${CONFIG.MONTHLY_LOOKBACK} MESES</div>
+      <div class="section-header">MONTHLY EVOLUTION · LAST ${CONFIG.MONTHLY_LOOKBACK} MONTHS</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Registros completados mes a mes</div>
+          <div class="chart-title">Completed registrations · monthly</div>
           <div class="chart-canvas"><canvas id="chart-meta-conv-monthly"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Costo por registro completado mes a mes</div>
+          <div class="chart-title">Cost per completed registration · monthly</div>
           <div class="chart-canvas"><canvas id="chart-meta-cpa-monthly"></canvas></div>
         </div>
       </div>
       ${places.length > 0 ? `
-      <div class="section-header">REPARTO POR UBICACIÓN</div>
+      <div class="section-header">BY PLACEMENT</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Inversión por ubicación</div>
+          <div class="chart-title">Spend by placement</div>
           <div class="chart-canvas"><canvas id="chart-meta-place"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Conversiones por ubicación</div>
+          <div class="chart-title">Conversions by placement</div>
           <div class="chart-canvas"><canvas id="chart-meta-placeconv"></canvas></div>
         </div>
       </div>` : ''}
-      <div class="section-header">DETALLE · CAMPAÑA ▸ AD SET ▸ ANUNCIO</div>
+      <div class="section-header">DETAILS · CAMPAIGN ▸ AD SET ▸ AD</div>
       <div class="table-wrap">
         <table class="report-table">
           <thead>
             <tr>
-              <th>Campaña / Ad Set / Anuncio</th>
-              <th class="num">Inversión</th>
-              <th class="num">Impresiones</th>
+              <th>Campaign / Ad Set / Ad</th>
+              <th class="num">Spend</th>
+              <th class="num">Impressions</th>
               <th class="num">Clicks</th>
               <th class="num">CTR</th>
               <th class="num">CPM</th>
-              <th class="num">Registros</th>
-              <th class="num">C/Registro</th>
+              <th class="num">Registrations</th>
+              <th class="num">Cost/Reg</th>
             </tr>
           </thead>
-          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">No data for this period</td></tr>'}</tbody>
           <tfoot>
             <tr>
               <td>TOTAL</td>
@@ -923,7 +923,7 @@
         data: {
           labels: monthly.map(d => fmtMonthLabel(d.month)),
           datasets: [{
-            label: 'Conversiones',
+            label: 'Completed registrations',
             data: monthly.map(d => d.conversions),
             borderColor: CONFIG.CHART_COLORS.lime,
             backgroundColor: 'rgba(204,255,68,0.12)',
@@ -1049,48 +1049,48 @@
 
     document.getElementById('google-content').innerHTML = `
       <div class="kpi-grid">
-        ${kpiCard('Inversión', fmtMoney(g.spend), `Período ${dr.since} → ${dr.until}`, true)}
-        ${kpiCard('Impresiones', fmtNum(g.impressions), `CPM ${fmtMoney(g.cpm || 0)}`)}
+        ${kpiCard('Spend', fmtMoney(g.spend), `Period ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('Impressions', fmtNum(g.impressions), `CPM ${fmtMoney(g.cpm || 0)}`)}
         ${kpiCard('Clicks', fmtNum(g.clicks), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
-        ${kpiCard('Conversiones', fmtNum(g.conversions || 0), 'Total tracked')}
-        ${kpiCard('CPA', g.cpa > 0 ? fmtMoney(g.cpa) : '—', 'Costo por conversión')}
-        ${kpiCard('Campañas activas', fmtNum(g.campaigns.length), `Top: ${truncate(g.campaigns[0]?.name || '—', 22)}`)}
+        ${kpiCard('Conversions', fmtNum(g.conversions || 0), 'Total tracked')}
+        ${kpiCard('CPA', g.cpa > 0 ? fmtMoney(g.cpa) : '—', 'Cost per conversion')}
+        ${kpiCard('Active campaigns', fmtNum(g.campaigns.length), `Top: ${truncate(g.campaigns[0]?.name || '—', 22)}`)}
       </div>
-      <div class="section-header">EVOLUCIÓN MENSUAL · ÚLTIMOS ${CONFIG.MONTHLY_LOOKBACK} MESES</div>
+      <div class="section-header">MONTHLY EVOLUTION · LAST ${CONFIG.MONTHLY_LOOKBACK} MONTHS</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Conversiones mes a mes</div>
+          <div class="chart-title">Conversions · monthly</div>
           <div class="chart-canvas"><canvas id="chart-google-conv-monthly"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">CPA mes a mes</div>
+          <div class="chart-title">CPA · monthly</div>
           <div class="chart-canvas"><canvas id="chart-google-cpa-monthly"></canvas></div>
         </div>
       </div>
-      <div class="section-header">RESULTADOS POR CAMPAÑA</div>
+      <div class="section-header">RESULTS BY CAMPAIGN</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Conversiones por campaña (top 10)</div>
+          <div class="chart-title">Conversions by campaign (top 10)</div>
           <div class="chart-canvas"><canvas id="chart-google-conv"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Inversión por campaña (top 10)</div>
+          <div class="chart-title">Spend by campaign (top 10)</div>
           <div class="chart-canvas"><canvas id="chart-google-spend"></canvas></div>
         </div>
       </div>
-      <div class="section-header">EFICIENCIA · COSTO Y COSTO/CONVERSIÓN</div>
+      <div class="section-header">EFFICIENCY · COST & COST PER CONVERSION</div>
       <div class="chart-block">
-        <div class="chart-title">Coste vs. Coste por conversión por campaña (top 10)</div>
+        <div class="chart-title">Cost vs. Cost per Conversion by campaign (top 10)</div>
         <div class="chart-canvas" style="height:320px;"><canvas id="chart-google-combo"></canvas></div>
       </div>
-      <div class="section-header">DETALLE · CAMPAÑA ▸ AD GROUP ▸ ANUNCIO</div>
+      <div class="section-header">DETAILS · CAMPAIGN ▸ AD GROUP ▸ AD</div>
       <div class="table-wrap">
         <table class="report-table">
           <thead>
             <tr>
-              <th>Campaña / Ad Group / Anuncio</th>
-              <th class="num">Inversión</th>
-              <th class="num">Impresiones</th>
+              <th>Campaign / Ad Group / Ad</th>
+              <th class="num">Spend</th>
+              <th class="num">Impressions</th>
               <th class="num">Clicks</th>
               <th class="num">CTR</th>
               <th class="num">CPM</th>
@@ -1098,7 +1098,7 @@
               <th class="num">CPA</th>
             </tr>
           </thead>
-          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">No data for this period</td></tr>'}</tbody>
           <tfoot>
             <tr>
               <td>TOTAL</td>
@@ -1146,7 +1146,7 @@
         data: {
           labels: monthly.map(d => fmtMonthLabel(d.month)),
           datasets: [{
-            label: 'Conversiones',
+            label: 'Conversions',
             data: monthly.map(d => d.conversions),
             borderColor: CONFIG.CHART_COLORS.lime,
             backgroundColor: 'rgba(204,255,68,0.12)',
@@ -1178,7 +1178,7 @@
         data: {
           labels: camps.map(c => truncate(c.name, 18)),
           datasets: [{
-            label: 'Conversiones',
+            label: 'Conversions',
             data: camps.map(c => c.conversions),
             backgroundColor: '#34A853', borderRadius: 4
           }]
@@ -1190,7 +1190,7 @@
         data: {
           labels: camps.map(c => truncate(c.name, 18)),
           datasets: [{
-            label: 'Inversión',
+            label: 'Spend',
             data: camps.map(c => c.spend),
             backgroundColor: '#4285F4', borderRadius: 4
           }]
@@ -1203,7 +1203,7 @@
           labels: camps.map(c => truncate(c.name, 18)),
           datasets: [
             {
-              label: 'Inversión (USD)',
+              label: 'Spend (USD)',
               data: camps.map(c => c.spend),
               backgroundColor: '#4285F4', borderRadius: 4,
               yAxisID: 'y',
@@ -1326,7 +1326,7 @@
         position: 'left',
         ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 }, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) },
         grid: { color: CONFIG.CHART_COLORS.gridLine },
-        title: { display: true, text: 'Inversión', color: '#888', font: { size: 10 } }
+        title: { display: true, text: 'Spend', color: '#888', font: { size: 10 } }
       },
       y1: {
         position: 'right',
@@ -1379,7 +1379,7 @@
   function fmtMonthLabel(ym) {
     if (!ym || ym.length < 7) return '?';
     const [y, m] = ym.split('-');
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return (months[parseInt(m, 10) - 1] || m) + " '" + y.slice(2);
   }
   // Status normalization for Meta `effective_status` → on/off/review badge
@@ -1415,7 +1415,7 @@
     const thumbHtml = url
       ? `<img class="ad-thumb" src="${escHtml(url)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'ad-thumb fallback\\'>🎬</div>'" />`
       : `<div class="ad-thumb fallback">🎬</div>`;
-    return `<a href="${adsMgrUrl}" target="_blank" rel="noopener" class="ad-preview-link" title="Abrir en Meta Ads Manager"><div class="ad-preview">${thumbHtml}<span class="ad-name">${escHtml(truncate(ad.name || '—', 50))}</span>${metaStatusBadge(ad.effective_status)}</div></a>`;
+    return `<a href="${adsMgrUrl}" target="_blank" rel="noopener" class="ad-preview-link" title="Open in Meta Ads Manager"><div class="ad-preview">${thumbHtml}<span class="ad-name">${escHtml(truncate(ad.name || '—', 50))}</span>${metaStatusBadge(ad.effective_status)}</div></a>`;
   }
   // Picks best image URL per CLAUDE.md priority chain
   function pickMetaAdImage(ad, hashUrlMap) {
@@ -1472,7 +1472,7 @@
       let dom = '';
       try { dom = new URL(host.startsWith('http') ? host : 'https://' + host).hostname; }
       catch(e) { dom = host; }
-      inner = '<div class="ad-rsa"><div class="rsa-host">Anuncio · ' + escHtml(dom) + '</div><div class="rsa-headline">' + headlines + '</div><div class="rsa-desc">' + escHtml(truncate(desc, 90)) + '</div></div>' + status;
+      inner = '<div class="ad-rsa"><div class="rsa-host">Ad · ' + escHtml(dom) + '</div><div class="rsa-headline">' + headlines + '</div><div class="rsa-desc">' + escHtml(truncate(desc, 90)) + '</div></div>' + status;
     } else if (t === 'IMAGE_AD' || t === 'RESPONSIVE_DISPLAY_AD' || t === 'DISPLAY_UPLOAD_AD') {
       const img = (ad.image_ad && ad.image_ad.image_url) || (ad.imageAd && ad.imageAd.imageUrl);
       inner = (img ? '<img class="ad-thumb" src="' + escHtml(img) + '" alt="" loading="lazy" />' : '<div class="ad-thumb fallback">🖼</div>') +
@@ -1485,7 +1485,7 @@
     } else {
       inner = '<div class="ad-thumb fallback">📄</div><span class="ad-name">' + escHtml(truncate(ad.name || t || 'Ad', 38)) + '</span>' + status;
     }
-    return '<a href="' + adUrl + '" target="_blank" rel="noopener" class="ad-preview-link" title="Abrir en Google Ads"><div class="ad-preview">' + inner + '</div></a>';
+    return '<a href="' + adUrl + '" target="_blank" rel="noopener" class="ad-preview-link" title="Open in Google Ads"><div class="ad-preview">' + inner + '</div></a>';
   }
 
   // ============================================================
@@ -2052,14 +2052,14 @@
     const totConvRate = totClicks ? totConv / totClicks * 100 : 0;
     const totCpa = totConv ? totSpend / totConv : 0;
     const keywordsHtml = `
-      <div class="section-header" id="keywords-section">DETALLE POR KEYWORDS · CAMPAÑA ▸ AD GROUP ▸ KEYWORD / SEARCH THEME</div>
+      <div class="section-header" id="keywords-section">KEYWORD BREAKDOWN · CAMPAIGN ▸ AD GROUP ▸ KEYWORD / SEARCH THEME</div>
       <div class="table-wrap" id="keywords-table-wrap">
         <table class="report-table">
           <thead>
             <tr>
-              <th>Campaña / Ad Group / Keyword</th>
-              <th class="num">Inversión</th>
-              <th class="num">Impresiones</th>
+              <th>Campaign / Ad Group / Keyword</th>
+              <th class="num">Spend</th>
+              <th class="num">Impressions</th>
               <th class="num">Clicks</th>
               <th class="num">CTR</th>
               <th class="num">% Conv.</th>
@@ -2067,7 +2067,7 @@
               <th class="num">CPA</th>
             </tr>
           </thead>
-          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">No data for this period</td></tr>'}</tbody>
           <tfoot>
             <tr>
               <td>TOTAL</td>
@@ -2147,7 +2147,7 @@
       renderGoogle();
       renderKeywords();
       const t = nowTimeStr();
-      document.getElementById('lastUpdate').textContent = 'Actualizado ' + t;
+      document.getElementById('lastUpdate').textContent = 'Updated ' + t;
       document.getElementById('footerUpdate').textContent = t;
     } catch (e) {
       console.error('loadAll error', e);
@@ -2185,20 +2185,20 @@
     const status = document.getElementById('liveStatus');
     const statusText = document.getElementById('liveStatusText');
     if (state.liveOn) {
-      btn.textContent = '⏸ Pausar EN VIVO';
+      btn.textContent = '⏸ Pause LIVE';
       btn.classList.add('live-on');
       status.classList.add('active');
-      statusText.textContent = 'EN VIVO';
+      statusText.textContent = 'LIVE';
       // Start auto-refresh
       if (state.autoTimer) clearInterval(state.autoTimer);
       state.autoTimer = setInterval(loadAll, CONFIG.AUTOREFRESH_MS);
       // Trigger immediate refresh too
       loadAll();
     } else {
-      btn.textContent = '🔴 Activar EN VIVO';
+      btn.textContent = '🔴 Go LIVE';
       btn.classList.remove('live-on');
       status.classList.remove('active');
-      statusText.textContent = 'Pausado';
+      statusText.textContent = 'Paused';
       if (state.autoTimer) clearInterval(state.autoTimer);
       state.autoTimer = null;
     }
@@ -2206,7 +2206,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v9 (ad-group-status-fix)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v10 (english)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
