@@ -512,7 +512,7 @@
 
     const summary = sumRes?.data?.[0] || {};
     const campaigns = (campRes?.data || []).map(c => ({
-      id: c.campaign_id,
+      id: String(c.campaign_id || ''),
       name: c.campaign_name,
       spend: parseFloat(c.spend || 0),
       impressions: parseInt(c.impressions || 0, 10),
@@ -571,11 +571,11 @@
       return { error: res.error.message || JSON.stringify(res.error), campaigns: [] };
     }
 
-    // Aggregate
+    // Aggregate (Google API returns camelCase — cast IDs to String for safe match)
     const rows = res.results || [];
     const campMap = {};
     rows.forEach(r => {
-      const cid = r.campaign?.id;
+      const cid = r.campaign?.id ? String(r.campaign.id) : null;
       if (!cid) return;
       if (!campMap[cid]) {
         campMap[cid] = {
@@ -742,13 +742,14 @@
     let tbodyRows = '';
     const PLACEHOLDER_PALETTE = ['#4267B2','#E1306C','#34A853','#FBBC05','#888','#5878C8','#9C27B0','#FF8A65','#26A69A'];
     (m.campaigns || []).forEach(c => {
-      const adsets = hier.adsetsMetricsByCamp[c.id] || [];
+      const cid = String(c.id);
+      const adsets = hier.adsetsMetricsByCamp[cid] || [];
       const cpc = c.clicks ? c.spend / c.clicks : 0;
       const cpm = c.impressions ? c.spend / c.impressions * 1000 : 0;
       tbodyRows += `
-        <tr class="row-campaign" data-cid="${escHtml(c.id)}">
+        <tr class="row-campaign" data-cid="${escHtml(cid)}">
           <td class="lbl-cell">
-            ${adsets.length ? `<span class="expand-btn" data-target="camp-${escHtml(c.id)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+            ${adsets.length ? `<span class="expand-btn" data-target="camp-${escHtml(cid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
             <strong>${escHtml(c.name || '—')}</strong>
           </td>
           <td class="num">${fmtMoney(c.spend)}</td>
@@ -760,11 +761,12 @@
           <td class="num">${c.results > 0 ? fmtMoney(c.spend / c.results) : '—'}</td>
         </tr>`;
       adsets.forEach(asg => {
-        const ads = hier.adsMetricsByAdset[asg.id] || [];
+        const asid = String(asg.id);
+        const ads = hier.adsMetricsByAdset[asid] || [];
         tbodyRows += `
-          <tr class="row-adset collapsed camp-${escHtml(c.id)}" data-asid="${escHtml(asg.id)}">
+          <tr class="row-adset collapsed camp-${escHtml(cid)}" data-asid="${escHtml(asid)}">
             <td class="lbl-cell">
-              ${ads.length ? `<span class="expand-btn" data-target="asg-${escHtml(asg.id)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+              ${ads.length ? `<span class="expand-btn" data-target="asg-${escHtml(asid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
               ${escHtml(asg.name || '—')} ${metaStatusBadge(asg.effective_status)}
             </td>
             <td class="num">${fmtMoney(asg.spend)}</td>
@@ -777,7 +779,7 @@
           </tr>`;
         ads.forEach(ad => {
           tbodyRows += `
-            <tr class="row-ad collapsed camp-${escHtml(c.id)} asg-${escHtml(asg.id)}" data-aid="${escHtml(ad.id)}">
+            <tr class="row-ad collapsed camp-${escHtml(cid)} asg-${escHtml(asid)}" data-aid="${escHtml(String(ad.id))}">
               <td class="lbl-cell">${metaAdPreviewHtml(ad, hier.hashUrlMap)}</td>
               <td class="num">${fmtMoney(ad.spend)}</td>
               <td class="num">${fmtNum(ad.impressions)}</td>
@@ -958,15 +960,21 @@
     const hier = state.data.googleHier || { adGroupsByCamp: {}, adsByGroup: {}, campStatus: {} };
 
     // Build hierarchical drill-down rows
+    console.log('[Google Render]', {
+      campaigns: (g.campaigns || []).length,
+      adGroupKeys: Object.keys(hier.adGroupsByCamp || {}),
+      campaignIds: (g.campaigns || []).map(c => c.id)
+    });
     let tbodyRows = '';
     (g.campaigns || []).forEach(c => {
-      const ags = hier.adGroupsByCamp[c.id] || [];
+      const cid = String(c.id);
+      const ags = hier.adGroupsByCamp[cid] || [];
       const cpm = c.impressions ? c.spend / c.impressions * 1000 : 0;
       tbodyRows += `
-        <tr class="row-campaign" data-cid="${escHtml(c.id)}">
+        <tr class="row-campaign" data-cid="${escHtml(cid)}">
           <td class="lbl-cell">
-            ${ags.length ? `<span class="expand-btn" data-target="gcamp-${escHtml(c.id)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
-            <strong>${escHtml(c.name || '—')}</strong> ${googleStatusBadge(hier.campStatus[c.id])}
+            ${ags.length ? `<span class="expand-btn" data-target="gcamp-${escHtml(cid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+            <strong>${escHtml(c.name || '—')}</strong> ${googleStatusBadge(hier.campStatus[cid])}
           </td>
           <td class="num">${fmtMoney(c.spend)}</td>
           <td class="num">${fmtNum(c.impressions)}</td>
@@ -977,11 +985,12 @@
           <td class="num">${c.cpa > 0 ? fmtMoney(c.cpa) : '—'}</td>
         </tr>`;
       ags.forEach(ag => {
-        const ads = hier.adsByGroup[ag.id] || [];
+        const agid = String(ag.id);
+        const ads = hier.adsByGroup[agid] || [];
         tbodyRows += `
-          <tr class="row-adset collapsed gcamp-${escHtml(c.id)}" data-agid="${escHtml(ag.id)}">
+          <tr class="row-adset collapsed gcamp-${escHtml(cid)}" data-agid="${escHtml(agid)}">
             <td class="lbl-cell">
-              ${ads.length ? `<span class="expand-btn" data-target="gag-${escHtml(ag.id)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+              ${ads.length ? `<span class="expand-btn" data-target="gag-${escHtml(agid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
               ${escHtml(ag.name || '—')} ${googleStatusBadge(ag.status)}
             </td>
             <td class="num">${fmtMoney(ag.spend)}</td>
@@ -994,7 +1003,7 @@
           </tr>`;
         ads.forEach(ad => {
           tbodyRows += `
-            <tr class="row-ad collapsed gcamp-${escHtml(c.id)} gag-${escHtml(ag.id)}" data-aid="${escHtml(ad.id)}">
+            <tr class="row-ad collapsed gcamp-${escHtml(cid)} gag-${escHtml(agid)}" data-aid="${escHtml(String(ad.id))}">
               <td class="lbl-cell">${googleAdPreviewHtml(ad)}</td>
               <td class="num">${fmtMoney(ad.spend)}</td>
               <td class="num">${fmtNum(ad.impressions)}</td>
@@ -1377,7 +1386,9 @@
     const link = story.link_data || {};
     const video = story.video_data || {};
     const feed = c.asset_feed_spec || {};
-    if (link.image_hash && hashUrlMap[link.image_hash])  return hashUrlMap[link.image_hash];
+    if (c.image_hash && hashUrlMap[c.image_hash])         return hashUrlMap[c.image_hash];
+    if (link.image_hash && hashUrlMap[link.image_hash])   return hashUrlMap[link.image_hash];
+    if (video.image_hash && hashUrlMap[video.image_hash]) return hashUrlMap[video.image_hash];
     if (video.image_url) return video.image_url;
     if (link.picture)    return link.picture;
     if (c.image_url)     return c.image_url;
@@ -1395,9 +1406,13 @@
     const hashes = new Set();
     ads.forEach(ad => {
       const c = ad.creative || {};
-      const link = (c.object_story_spec || {}).link_data || {};
+      const story = c.object_story_spec || {};
+      const link = story.link_data || {};
+      const video = story.video_data || {};   // <-- Renew uses video_data.image_hash
       const feed = c.asset_feed_spec || {};
-      if (link.image_hash) hashes.add(link.image_hash);
+      if (c.image_hash)      hashes.add(c.image_hash);
+      if (link.image_hash)   hashes.add(link.image_hash);
+      if (video.image_hash)  hashes.add(video.image_hash);
       if (feed.images && feed.images.length) {
         feed.images.forEach(i => { if (i.hash) hashes.add(i.hash); });
       }
@@ -1578,12 +1593,14 @@
 
     const adsetsMetricsByCamp = {};
     (adsetRes?.data || []).forEach(r => {
-      const cid = r.campaign_id;
+      const cid = String(r.campaign_id || '');
+      if (!cid) return;
       if (!adsetsMetricsByCamp[cid]) adsetsMetricsByCamp[cid] = [];
+      const asid = String(r.adset_id || '');
       adsetsMetricsByCamp[cid].push({
-        id: r.adset_id,
-        name: r.adset_name || adsetName[r.adset_id] || '—',
-        effective_status: adsetStatus[r.adset_id] || 'ACTIVE',
+        id: asid,
+        name: r.adset_name || adsetName[asid] || '—',
+        effective_status: adsetStatus[asid] || 'ACTIVE',
         spend:       parseFloat(r.spend || 0),
         impressions: parseInt(r.impressions || 0, 10),
         clicks:      parseInt(r.clicks || 0, 10),
@@ -1594,11 +1611,13 @@
     });
     const adsMetricsByAdset = {};
     (adRes?.data || []).forEach(r => {
-      const aid = r.adset_id;
+      const aid = String(r.adset_id || '');
+      if (!aid) return;
       if (!adsMetricsByAdset[aid]) adsMetricsByAdset[aid] = [];
-      const adMeta = ads.find(a => a.id === r.ad_id) || {};
+      const adId = String(r.ad_id || '');
+      const adMeta = ads.find(a => String(a.id) === adId) || {};
       adsMetricsByAdset[aid].push({
-        id: r.ad_id,
+        id: adId,
         name: r.ad_name || adMeta.name || '—',
         effective_status: adMeta.effective_status || 'ACTIVE',
         creative: adMeta.creative || {},
@@ -1611,6 +1630,12 @@
       });
     });
 
+    console.log('[Meta Hierarchy]', {
+      adsetCount: Object.values(adsetsMetricsByCamp).reduce((s, a) => s + a.length, 0),
+      adCount: Object.values(adsMetricsByAdset).reduce((s, a) => s + a.length, 0),
+      campaignIds: Object.keys(adsetsMetricsByCamp),
+      imageHashesCollected: Object.keys(hashUrlMap).length
+    });
     return { adsetsMetricsByCamp, adsMetricsByAdset, campStatus, hashUrlMap };
   }
   async function fetchGoogleHierarchy(period) {
@@ -1650,20 +1675,22 @@
     const campStatus = {};
     (campRes?.results || []).forEach(r => {
       const cid = r.campaign?.id;
-      if (cid) campStatus[cid] = r.campaign.status;
+      if (cid) campStatus[String(cid)] = r.campaign.status;
     });
 
+    // NOTE: Google Ads API responses are camelCase (adGroup, adGroupAd, responsiveSearchAd)
     const adGroupsByCamp = {};
     (agRes?.results || []).forEach(r => {
-      const cid = r.campaign?.id;
-      const agid = r.ad_group?.id;
+      const cid = r.campaign?.id ? String(r.campaign.id) : null;
+      const adGroup = r.adGroup || r.ad_group;   // tolerate both just in case
+      const agid = adGroup?.id ? String(adGroup.id) : null;
       if (!cid || !agid) return;
       if (!adGroupsByCamp[cid]) adGroupsByCamp[cid] = {};
       if (!adGroupsByCamp[cid][agid]) {
         adGroupsByCamp[cid][agid] = {
           id: agid,
-          name: r.ad_group.name,
-          status: r.ad_group.status,
+          name: adGroup.name,
+          status: adGroup.status,
           spend: 0, impressions: 0, clicks: 0, conversions: 0, cpmSum: 0, cpmRows: 0
         };
       }
@@ -1678,18 +1705,20 @@
 
     const adsByGroup = {};
     (adsRes?.results || []).forEach(r => {
-      const agid = r.ad_group?.id;
+      const adGroup = r.adGroup || r.ad_group;
+      const agid = adGroup?.id ? String(adGroup.id) : null;
       if (!agid) return;
       if (!adsByGroup[agid]) adsByGroup[agid] = {};
-      const ad = r.ad_group_ad?.ad || {};
-      const aid = ad.id;
+      const adGroupAd = r.adGroupAd || r.ad_group_ad || {};
+      const ad = adGroupAd.ad || {};
+      const aid = ad.id ? String(ad.id) : null;
       if (!aid) return;
       if (!adsByGroup[agid][aid]) {
         adsByGroup[agid][aid] = {
           id: aid,
           name: ad.name || '',
           type: ad.type,
-          status: r.ad_group_ad?.status,
+          status: adGroupAd.status,
           final_urls: ad.finalUrls || ad.final_urls,
           responsive_search_ad: ad.responsiveSearchAd || ad.responsive_search_ad,
           image_ad: ad.imageAd || ad.image_ad,
@@ -1814,7 +1843,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v3 (meta-monthly-fix)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v4 (camelCase + String IDs)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
