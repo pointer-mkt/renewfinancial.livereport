@@ -1894,9 +1894,9 @@
   // ============================================================
   async function fetchKeywords(period) {
     const dr = getDateRange(period);
-    // Search keywords (excludes PMAX)
+    // Search keywords (excludes PMAX) — include ad_group.status to badge the GROUP properly
     const kwQuery =
-      "SELECT campaign.id, campaign.name, ad_group.id, ad_group.name, " +
+      "SELECT campaign.id, campaign.name, ad_group.id, ad_group.name, ad_group.status, " +
       "ad_group_criterion.criterion_id, ad_group_criterion.keyword.text, " +
       "ad_group_criterion.keyword.match_type, ad_group_criterion.status, " +
       "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
@@ -1933,7 +1933,7 @@
       const conv = parseFloat(m.conversions || 0);
       if (!byCampGroup[cid]) byCampGroup[cid] = { id: cid, name: cname, spend: 0, impressions: 0, clicks: 0, conversions: 0, adGroups: {}, isPmax: false };
       const camp = byCampGroup[cid];
-      if (!camp.adGroups[agid]) camp.adGroups[agid] = { id: agid, name: agname, status: kc.status, spend: 0, impressions: 0, clicks: 0, conversions: 0, items: [] };
+      if (!camp.adGroups[agid]) camp.adGroups[agid] = { id: agid, name: agname, status: ag.status, spend: 0, impressions: 0, clicks: 0, conversions: 0, items: [] };
       const grp = camp.adGroups[agid];
       camp.spend += spend; camp.impressions += impressions; camp.clicks += clicks; camp.conversions += conv;
       grp.spend += spend; grp.impressions += impressions; grp.clicks += clicks; grp.conversions += conv;
@@ -2206,7 +2206,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v8 (pmax-asset-group-query-fix)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v9 (ad-group-status-fix)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
