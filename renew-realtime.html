@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Renew Financial · Reporte en Tiempo Real · Pointer</title>
+  <title>Renew Financial Â· Reporte en Tiempo Real Â· Pointer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -34,7 +34,7 @@
     }
     .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 60px; }
 
-    /* ── Header ────────────────────────────── */
+    /* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .topbar {
       display: flex; justify-content: space-between; align-items: center;
       gap: 16px; flex-wrap: wrap;
@@ -72,7 +72,7 @@
       50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
     }
 
-    /* ── Report title ─────────────────────── */
+    /* â”€â”€ Report title â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .report-title {
       font-family: 'Audiowide', sans-serif; font-size: 28px;
       color: var(--lime); letter-spacing: 1.2px;
@@ -83,7 +83,7 @@
       margin-bottom: 20px;
     }
 
-    /* ── Controls bar ─────────────────────── */
+    /* â”€â”€ Controls bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .controls {
       display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
       padding: 14px 16px; background: var(--surface);
@@ -116,7 +116,7 @@
     .ctrl-spacer { flex: 1; }
     .last-update { font-size: 10.5px; color: var(--gray); white-space: nowrap; }
 
-    /* ── Tabs ─────────────────────────────── */
+    /* â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .tabs {
       display: flex; gap: 4px; background: var(--surface);
       border: 1px solid var(--border); border-radius: 10px; padding: 4px;
@@ -136,7 +136,7 @@
       box-shadow: 0 4px 14px var(--lime-soft);
     }
 
-    /* ── KPI cards ────────────────────────── */
+    /* â”€â”€ KPI cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .kpi-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px; margin-bottom: 22px;
@@ -165,7 +165,7 @@
     .kpi-card.big .kpi-value { font-size: 32px; }
     .kpi-card.big::before { background: linear-gradient(180deg, var(--lime), #88dd22); }
 
-    /* ── Section ──────────────────────────── */
+    /* â”€â”€ Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .section-header {
       background: var(--lime); color: #000;
       padding: 10px 16px; border-radius: 8px;
@@ -184,11 +184,11 @@
     .chart-canvas { position: relative; height: 280px; }
     @media (max-width: 600px) { .chart-canvas { height: 220px; } }
 
-    /* ── Charts row (2 cols desktop) ──────── */
+    /* â”€â”€ Charts row (2 cols desktop) â”€â”€â”€â”€â”€â”€â”€â”€ */
     .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
 
-    /* ── Table ────────────────────────────── */
+    /* â”€â”€ Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .table-wrap {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 12px; padding: 6px; overflow-x: auto;
@@ -218,7 +218,7 @@
     }
     table.report-table tfoot td.num { text-align: right; }
 
-    /* ── Loading / empty ──────────────────── */
+    /* â”€â”€ Loading / empty â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .loading {
       display: flex; align-items: center; justify-content: center;
       padding: 60px 20px; color: var(--gray); font-size: 13px;
@@ -242,7 +242,7 @@
       font-size: 12.5px;
     }
 
-    /* ── Footer ───────────────────────────── */
+    /* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .footer {
       margin-top: 40px; padding-top: 18px;
       border-top: 1px solid var(--border);
@@ -251,9 +251,64 @@
     }
     .footer .accent { color: var(--lime); font-family: 'Audiowide', sans-serif; letter-spacing: 0.5px; }
 
-    /* ── Tab content visibility ───────────── */
+    /* â”€â”€ Tab content visibility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+
+    /* â”€â”€ Hierarchical drill-down rows â”€â”€â”€â”€â”€â”€ */
+    table.report-table tbody tr.row-adset td { background: rgba(255,255,255,0.015); }
+    table.report-table tbody tr.row-ad td { background: rgba(255,255,255,0.03); }
+    table.report-table tbody tr.collapsed { display: none; }
+    .expand-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; margin-right: 8px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--lime);
+      font-size: 9px; cursor: pointer; user-select: none;
+      transition: transform 0.15s;
+    }
+    .expand-btn:hover { background: var(--lime-soft); border-color: var(--lime); }
+    .expand-btn.expanded { transform: rotate(90deg); }
+    .row-adset td:first-child { padding-left: 30px; }
+    .row-ad td:first-child { padding-left: 50px; }
+    .row-empty td { padding: 14px 14px; color: var(--gray); font-style: italic; font-size: 11.5px; }
+
+    /* â”€â”€ Status badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .status-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 999px;
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      margin-left: 8px; vertical-align: middle;
+    }
+    .status-badge.on { background: rgba(16,216,121,0.15); color: var(--green); border: 1px solid rgba(16,216,121,0.3); }
+    .status-badge.off { background: rgba(255,77,109,0.12); color: var(--red); border: 1px solid rgba(255,77,109,0.3); }
+    .status-badge.review { background: rgba(255,140,66,0.12); color: var(--orange); border: 1px solid rgba(255,140,66,0.3); }
+
+    /* â”€â”€ Ad preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .ad-preview {
+      display: inline-flex; align-items: center; gap: 10px;
+      max-width: 100%;
+    }
+    .ad-thumb {
+      width: 42px; height: 42px; object-fit: cover;
+      border-radius: 6px; border: 1px solid var(--border);
+      background: var(--surface-2); flex-shrink: 0;
+    }
+    .ad-thumb.fallback {
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--gray); font-size: 16px;
+    }
+    .ad-rsa {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 10px; min-width: 220px; max-width: 320px;
+      font-size: 10.5px; line-height: 1.35;
+    }
+    .ad-rsa .rsa-host { color: var(--gray); font-size: 9px; margin-bottom: 2px; }
+    .ad-rsa .rsa-headline { color: #8AB4F8; font-weight: 600; margin-bottom: 2px; }
+    .ad-rsa .rsa-desc { color: var(--text-2); font-size: 9.5px; }
+    .ad-name { color: var(--text-2); font-size: 11.5px; }
+
+    /* â”€â”€ Truncated label cell â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    .lbl-cell { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
   </style>
 </head>
 <body>
@@ -264,7 +319,7 @@
       <div class="brand">
         <div class="brand-logo">P</div>
         <div>
-          <div class="brand-text"><span class="accent">POINTER</span> · MARKETING DIGITAL</div>
+          <div class="brand-text"><span class="accent">POINTER</span> Â· MARKETING DIGITAL</div>
           <div style="font-size:10px;color:var(--gray);letter-spacing:0.4px;margin-top:2px;">Real-time Performance Dashboard</div>
         </div>
       </div>
@@ -276,60 +331,60 @@
 
     <!-- Report title -->
     <div class="report-title">RENEW FINANCIAL</div>
-    <div class="report-sub">Reporte de performance en tiempo real · Meta Ads + Google Ads</div>
+    <div class="report-sub">Reporte de performance en tiempo real Â· Meta Ads + Google Ads</div>
 
     <!-- Controls -->
     <div class="controls">
       <div class="period-group" id="periodGroup">
         <button class="period-btn" data-period="today">Hoy</button>
-        <button class="period-btn active" data-period="7d">7 días</button>
+        <button class="period-btn active" data-period="7d">7 dÃ­as</button>
         <button class="period-btn" data-period="month">Mes actual</button>
       </div>
-      <button class="ctrl-btn" id="liveBtn">🔴 Activar EN VIVO</button>
-      <button class="ctrl-btn" id="refreshBtn">🔄 Actualizar</button>
+      <button class="ctrl-btn" id="liveBtn">ðŸ”´ Activar EN VIVO</button>
+      <button class="ctrl-btn" id="refreshBtn">ðŸ”„ Actualizar</button>
       <div class="ctrl-spacer"></div>
-      <div class="last-update" id="lastUpdate">Esperando primera carga…</div>
+      <div class="last-update" id="lastUpdate">Esperando primera cargaâ€¦</div>
     </div>
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" data-tab="total">📊 TOTAL</button>
-      <button class="tab" data-tab="meta">🟦 META ADS</button>
-      <button class="tab" data-tab="google">🟢 GOOGLE ADS</button>
+      <button class="tab active" data-tab="total">ðŸ“Š TOTAL</button>
+      <button class="tab" data-tab="meta">ðŸŸ¦ META ADS</button>
+      <button class="tab" data-tab="google">ðŸŸ¢ GOOGLE ADS</button>
     </div>
 
     <!-- TOTAL Tab -->
     <div class="tab-content active" id="tab-total">
       <div id="total-content">
-        <div class="loading"><span class="spinner"></span>Cargando datos en vivo…</div>
+        <div class="loading"><span class="spinner"></span>Cargando datos en vivoâ€¦</div>
       </div>
     </div>
 
     <!-- META Tab -->
     <div class="tab-content" id="tab-meta">
       <div id="meta-content">
-        <div class="loading"><span class="spinner"></span>Cargando Meta Ads…</div>
+        <div class="loading"><span class="spinner"></span>Cargando Meta Adsâ€¦</div>
       </div>
     </div>
 
     <!-- GOOGLE Tab -->
     <div class="tab-content" id="tab-google">
       <div id="google-content">
-        <div class="loading"><span class="spinner"></span>Cargando Google Ads…</div>
+        <div class="loading"><span class="spinner"></span>Cargando Google Adsâ€¦</div>
       </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-      Dashboard generado por <span class="accent">POINTER</span> · Datos en tiempo real desde Meta Marketing API + Google Ads API<br/>
-      Auto-actualización cada 5 min cuando "EN VIVO" está activo · Última actualización: <span id="footerUpdate">—</span>
+      Dashboard generado por <span class="accent">POINTER</span> Â· Datos en tiempo real desde Meta Marketing API + Google Ads API<br/>
+      Auto-actualizaciÃ³n cada 5 min cuando "EN VIVO" estÃ¡ activo Â· Ãšltima actualizaciÃ³n: <span id="footerUpdate">â€”</span>
     </div>
 
   </div>
 
   <script>
   // ============================================================
-  // CONFIG — Renew Financial
+  // CONFIG â€” Renew Financial
   // ============================================================
   const CONFIG = {
     API_BASE:   'https://renew-live-proxy.renata-a6b.workers.dev',
@@ -339,6 +394,16 @@
     CURRENCY:   'USD',
     LOCALE:     'en-US',
     AUTOREFRESH_MS: 5 * 60 * 1000,  // 5 min
+    MONTHLY_LOOKBACK: 12,            // months of evolution charts (fixed, independent of period selector)
+    // Renew Financial-specific conversion event = "Registro completado"
+    // Meta returns multiple action_type variants depending on attribution path;
+    // pick the MAX (different paths may report independently).
+    META_CONVERSION_TYPES: [
+      'complete_registration',
+      'offsite_conversion.fb_pixel_complete_registration',
+      'omni_complete_registration',
+      'offsite_complete_registration_add_meta_leads'
+    ],
     CHART_COLORS: {
       meta:    ['#4267B2', '#5878C8', '#7390DC', '#8FA8EC', '#ACBFF5'],
       google:  ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#46BDC6'],
@@ -396,7 +461,7 @@
   }
 
   // ============================================================
-  // DATA FETCHING — Meta + Google
+  // DATA FETCHING â€” Meta + Google
   // ============================================================
   async function fetchMeta(period) {
     const dr = getDateRange(period);
@@ -412,10 +477,10 @@
     campUrl.searchParams.set('time_range', JSON.stringify(dr));
     campUrl.searchParams.set('limit', '200');
     campUrl.searchParams.set('access_token', '__PROXY__');
-    // 3) Placement breakdown
+    // 3) Placement breakdown â€” granular (publisher + position): Stories, Feed, Reelsâ€¦
     const placeUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
     placeUrl.searchParams.set('fields', 'spend,impressions,actions');
-    placeUrl.searchParams.set('breakdowns', 'publisher_platform');
+    placeUrl.searchParams.set('breakdowns', 'publisher_platform,platform_position');
     placeUrl.searchParams.set('time_range', JSON.stringify(dr));
     placeUrl.searchParams.set('access_token', '__PROXY__');
 
@@ -431,18 +496,18 @@
       const m = actions.find(a => a.action_type === type);
       return m ? parseFloat(m.value) : 0;
     }
-    // Try common conversion-like types
+    // Renew Financial conversion = "Registro completado" (complete_registration).
+    // Meta may report the same conversion under different action_type variants
+    // (depending on attribution path); take the MAX, never sum (avoids double-count).
+    // No generic fallback: if no variant present, returns 0 (more honest than guessing).
     function resultsFromActions(actions) {
       if (!Array.isArray(actions)) return 0;
-      const priorities = ['lead', 'complete_registration', 'submit_application_total',
-        'onsite_conversion.lead_grouped', 'offsite_conversion.fb_pixel_lead',
-        'purchase', 'onsite_conversion.purchase'];
-      for (const p of priorities) {
-        const v = actSum(actions, p);
-        if (v > 0) return v;
+      let max = 0;
+      for (const t of CONFIG.META_CONVERSION_TYPES) {
+        const v = actSum(actions, t);
+        if (v > max) max = v;
       }
-      // Fallback: total of all action types
-      return actions.reduce((s, a) => s + parseFloat(a.value || 0), 0);
+      return max;
     }
 
     const summary = sumRes?.data?.[0] || {};
@@ -457,7 +522,7 @@
     })).sort((a, b) => b.spend - a.spend);
 
     const placements = (placeRes?.data || []).map(p => ({
-      name: p.publisher_platform || 'unknown',
+      name: formatPlacementLabel(p.publisher_platform, p.platform_position),
       spend: parseFloat(p.spend || 0),
       impressions: parseInt(p.impressions || 0, 10),
       results: resultsFromActions(p.actions)
@@ -485,7 +550,7 @@
 
   async function fetchGoogle(period) {
     const dr = getDateRange(period);
-    // Single GAQL query — campaign metrics
+    // Single GAQL query â€” campaign metrics
     const query =
       "SELECT campaign.id, campaign.name, " +
       "metrics.cost_micros, metrics.clicks, metrics.impressions, " +
@@ -595,25 +660,25 @@
 
     const dr = getDateRange(state.period);
     const html = `
-      ${errs.length ? `<div class="error" style="margin-bottom:16px;">⚠ ${errs.join(' · ')}</div>` : ''}
+      ${errs.length ? `<div class="error" style="margin-bottom:16px;">âš  ${errs.join(' Â· ')}</div>` : ''}
       <div class="kpi-grid">
-        ${kpiCard('Inversión total', fmtMoney(totSpend), `Meta ${fmtMoney(m.spend || 0)} · Google ${fmtMoney(g.spend || 0)}`, true)}
-        ${kpiCard('Conversiones totales', fmtNum(totResults), `Meta ${fmtNum(m.results || 0)} · Google ${fmtNum(g.conversions || 0)}`, true)}
-        ${kpiCard('Costo / conversión', avgCpr > 0 ? fmtMoney(avgCpr) : '—', 'Promedio combinado', true)}
+        ${kpiCard('InversiÃ³n total', fmtMoney(totSpend), `Meta ${fmtMoney(m.spend || 0)} Â· Google ${fmtMoney(g.spend || 0)}`, true)}
+        ${kpiCard('Conversiones totales', fmtNum(totResults), `Meta ${fmtNum(m.results || 0)} Â· Google ${fmtNum(g.conversions || 0)}`, true)}
+        ${kpiCard('Costo / conversiÃ³n', avgCpr > 0 ? fmtMoney(avgCpr) : 'â€”', 'InversiÃ³n total Ã· Conversiones totales', true)}
       </div>
       <div class="section-header">DETALLE POR PLATAFORMA</div>
       <div class="kpi-grid">
-        ${kpiCard('🟦 Meta · Inversión', fmtMoney(m.spend || 0), `${fmtNum(m.impressions || 0)} impresiones`)}
-        ${kpiCard('🟦 Meta · Clicks', fmtNum(m.clicks || 0), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
-        ${kpiCard('🟦 Meta · Conversiones', fmtNum(m.results || 0), m.cpr > 0 ? 'C/Resultado ' + fmtMoney(m.cpr) : '—')}
-        ${kpiCard('🟢 Google · Inversión', fmtMoney(g.spend || 0), `${fmtNum(g.impressions || 0)} impresiones`)}
-        ${kpiCard('🟢 Google · Clicks', fmtNum(g.clicks || 0), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
-        ${kpiCard('🟢 Google · Conversiones', fmtNum(g.conversions || 0), g.cpa > 0 ? 'CPA ' + fmtMoney(g.cpa) : '—')}
+        ${kpiCard('ðŸŸ¦ Meta Â· InversiÃ³n', fmtMoney(m.spend || 0), `${fmtNum(m.impressions || 0)} impresiones`)}
+        ${kpiCard('ðŸŸ¦ Meta Â· Clicks', fmtNum(m.clicks || 0), `CTR ${fmtPct(m.ctr || 0)} Â· CPC ${fmtMoney(m.cpc || 0)}`)}
+        ${kpiCard('ðŸŸ¦ Meta Â· Conversiones', fmtNum(m.results || 0), m.cpr > 0 ? 'C/Resultado ' + fmtMoney(m.cpr) : 'â€”')}
+        ${kpiCard('ðŸŸ¢ Google Â· InversiÃ³n', fmtMoney(g.spend || 0), `${fmtNum(g.impressions || 0)} impresiones`)}
+        ${kpiCard('ðŸŸ¢ Google Â· Clicks', fmtNum(g.clicks || 0), `CTR ${fmtPct(g.ctr || 0)} Â· CPC ${fmtMoney(g.cpc || 0)}`)}
+        ${kpiCard('ðŸŸ¢ Google Â· Conversiones', fmtNum(g.conversions || 0), g.cpa > 0 ? 'CPA ' + fmtMoney(g.cpa) : 'â€”')}
       </div>
-      <div class="section-header">REPARTO DE INVERSIÓN</div>
+      <div class="section-header">REPARTO DE INVERSIÃ“N</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Inversión por plataforma</div>
+          <div class="chart-title">InversiÃ³n por plataforma</div>
           <div class="chart-canvas"><canvas id="chart-total-spend"></canvas></div>
         </div>
         <div class="chart-block">
@@ -622,7 +687,7 @@
         </div>
       </div>
       <div style="text-align:center;font-size:10.5px;color:var(--gray);margin-top:6px;">
-        Período: ${dr.since} → ${dr.until} · Moneda: ${CONFIG.CURRENCY}
+        PerÃ­odo: ${dr.since} â†’ ${dr.until} Â· Moneda: ${CONFIG.CURRENCY}
       </div>
     `;
     document.getElementById('total-content').innerHTML = html;
@@ -656,7 +721,7 @@
             borderColor: 'transparent', borderWidth: 0
           }]
         },
-        options: doughnutOpts()
+        options: doughnutOpts({ fmt: fmtNum })  // counts, not money
       });
     }
   }
@@ -665,72 +730,115 @@
     const m = state.data.meta;
     if (!m) return;
     if (m.error) {
-      document.getElementById('meta-content').innerHTML = `<div class="error">⚠ Meta API: ${m.error}</div>`;
+      document.getElementById('meta-content').innerHTML = `<div class="error">âš  Meta API: ${m.error}</div>`;
       return;
     }
-    const camps = (m.campaigns || []).slice(0, 10);
     const places = m.placements || [];
     const dr = getDateRange(state.period);
+    const monthly = state.data.metaMonthly || [];
+    const hier = state.data.metaHier || { adsetsMetricsByCamp: {}, adsMetricsByAdset: {}, hashUrlMap: {} };
 
-    const tableRows = (m.campaigns || []).map(c => `
-      <tr>
-        <td>${escHtml(c.name || '—')}</td>
-        <td class="num">${fmtMoney(c.spend)}</td>
-        <td class="num">${fmtNum(c.impressions)}</td>
-        <td class="num">${fmtNum(c.clicks)}</td>
-        <td class="num">${fmtPct(c.ctr || 0)}</td>
-        <td class="num">${fmtNum(c.results || 0)}</td>
-        <td class="num">${c.results > 0 ? fmtMoney(c.spend / c.results) : '—'}</td>
-      </tr>
-    `).join('');
+    // Build hierarchical drill-down rows
+    let tbodyRows = '';
+    const PLACEHOLDER_PALETTE = ['#4267B2','#E1306C','#34A853','#FBBC05','#888','#5878C8','#9C27B0','#FF8A65','#26A69A'];
+    (m.campaigns || []).forEach(c => {
+      const adsets = hier.adsetsMetricsByCamp[c.id] || [];
+      const cpc = c.clicks ? c.spend / c.clicks : 0;
+      const cpm = c.impressions ? c.spend / c.impressions * 1000 : 0;
+      tbodyRows += `
+        <tr class="row-campaign" data-cid="${escHtml(c.id)}">
+          <td class="lbl-cell">
+            ${adsets.length ? `<span class="expand-btn" data-target="camp-${escHtml(c.id)}">â–¶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+            <strong>${escHtml(c.name || 'â€”')}</strong>
+          </td>
+          <td class="num">${fmtMoney(c.spend)}</td>
+          <td class="num">${fmtNum(c.impressions)}</td>
+          <td class="num">${fmtNum(c.clicks)}</td>
+          <td class="num">${fmtPct(c.ctr || 0)}</td>
+          <td class="num">${fmtMoney(cpm)}</td>
+          <td class="num">${fmtNum(c.results || 0)}</td>
+          <td class="num">${c.results > 0 ? fmtMoney(c.spend / c.results) : 'â€”'}</td>
+        </tr>`;
+      adsets.forEach(asg => {
+        const ads = hier.adsMetricsByAdset[asg.id] || [];
+        tbodyRows += `
+          <tr class="row-adset collapsed camp-${escHtml(c.id)}" data-asid="${escHtml(asg.id)}">
+            <td class="lbl-cell">
+              ${ads.length ? `<span class="expand-btn" data-target="asg-${escHtml(asg.id)}">â–¶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+              ${escHtml(asg.name || 'â€”')} ${metaStatusBadge(asg.effective_status)}
+            </td>
+            <td class="num">${fmtMoney(asg.spend)}</td>
+            <td class="num">${fmtNum(asg.impressions)}</td>
+            <td class="num">${fmtNum(asg.clicks)}</td>
+            <td class="num">${fmtPct(asg.ctr || 0)}</td>
+            <td class="num">${fmtMoney(asg.cpm || 0)}</td>
+            <td class="num">${fmtNum(asg.results || 0)}</td>
+            <td class="num">${asg.results > 0 ? fmtMoney(asg.spend / asg.results) : 'â€”'}</td>
+          </tr>`;
+        ads.forEach(ad => {
+          tbodyRows += `
+            <tr class="row-ad collapsed camp-${escHtml(c.id)} asg-${escHtml(asg.id)}" data-aid="${escHtml(ad.id)}">
+              <td class="lbl-cell">${metaAdPreviewHtml(ad, hier.hashUrlMap)}</td>
+              <td class="num">${fmtMoney(ad.spend)}</td>
+              <td class="num">${fmtNum(ad.impressions)}</td>
+              <td class="num">${fmtNum(ad.clicks)}</td>
+              <td class="num">${fmtPct(ad.ctr || 0)}</td>
+              <td class="num">${fmtMoney(ad.cpm || 0)}</td>
+              <td class="num">${fmtNum(ad.results || 0)}</td>
+              <td class="num">${ad.results > 0 ? fmtMoney(ad.spend / ad.results) : 'â€”'}</td>
+            </tr>`;
+        });
+      });
+    });
 
     document.getElementById('meta-content').innerHTML = `
       <div class="kpi-grid">
-        ${kpiCard('Inversión', fmtMoney(m.spend), `Período ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('InversiÃ³n', fmtMoney(m.spend), `PerÃ­odo ${dr.since} â†’ ${dr.until}`, true)}
         ${kpiCard('Impresiones', fmtNum(m.impressions), `Alcance ${fmtNum(m.reach || 0)}`)}
-        ${kpiCard('Clicks', fmtNum(m.clicks), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
+        ${kpiCard('Clicks', fmtNum(m.clicks), `CTR ${fmtPct(m.ctr || 0)} Â· CPC ${fmtMoney(m.cpc || 0)}`)}
         ${kpiCard('CPM', fmtMoney(m.cpm || 0), `Frecuencia ${(m.frequency || 0).toFixed(2)}x`)}
-        ${kpiCard('Conversiones', fmtNum(m.results || 0), 'Total acciones')}
-        ${kpiCard('Costo / Resultado', m.cpr > 0 ? fmtMoney(m.cpr) : '—', 'CPL/CPA')}
+        ${kpiCard('Conversiones', fmtNum(m.results || 0), 'Registros completados')}
+        ${kpiCard('Costo / Resultado', m.cpr > 0 ? fmtMoney(m.cpr) : 'â€”', 'Costo por registro')}
       </div>
-      <div class="section-header">RESULTADOS POR CAMPAÑA</div>
+      <div class="section-header">EVOLUCIÃ“N MENSUAL Â· ÃšLTIMOS ${CONFIG.MONTHLY_LOOKBACK} MESES</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Inversión por campaña (top 10)</div>
-          <div class="chart-canvas"><canvas id="chart-meta-spend"></canvas></div>
+          <div class="chart-title">Conversiones mes a mes</div>
+          <div class="chart-canvas"><canvas id="chart-meta-conv-monthly"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Conversiones por campaña (top 10)</div>
-          <div class="chart-canvas"><canvas id="chart-meta-conv"></canvas></div>
+          <div class="chart-title">CPA mes a mes</div>
+          <div class="chart-canvas"><canvas id="chart-meta-cpa-monthly"></canvas></div>
         </div>
       </div>
       ${places.length > 0 ? `
-      <div class="section-header">REPARTO POR PLATAFORMA</div>
+      <div class="section-header">REPARTO POR UBICACIÃ“N</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Inversión por placement</div>
+          <div class="chart-title">InversiÃ³n por ubicaciÃ³n</div>
           <div class="chart-canvas"><canvas id="chart-meta-place"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Conversiones por placement</div>
+          <div class="chart-title">Conversiones por ubicaciÃ³n</div>
           <div class="chart-canvas"><canvas id="chart-meta-placeconv"></canvas></div>
         </div>
       </div>` : ''}
-      <div class="section-header">DETALLE DE CAMPAÑAS</div>
+      <div class="section-header">DETALLE Â· CAMPAÃ‘A â–¸ AD SET â–¸ ANUNCIO</div>
       <div class="table-wrap">
         <table class="report-table">
           <thead>
             <tr>
-              <th>Campaña</th>
-              <th class="num">Inversión</th>
+              <th>CampaÃ±a / Ad Set / Anuncio</th>
+              <th class="num">InversiÃ³n</th>
               <th class="num">Impresiones</th>
               <th class="num">Clicks</th>
               <th class="num">CTR</th>
-              <th class="num">Conv.</th>
-              <th class="num">Costo/Conv.</th>
+              <th class="num">CPM</th>
+              <th class="num">Registros</th>
+              <th class="num">C/Registro</th>
             </tr>
           </thead>
-          <tbody>${tableRows || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el perÃ­odo</td></tr>'}</tbody>
           <tfoot>
             <tr>
               <td>TOTAL</td>
@@ -738,40 +846,75 @@
               <td class="num">${fmtNum(m.impressions)}</td>
               <td class="num">${fmtNum(m.clicks)}</td>
               <td class="num">${fmtPct(m.ctr || 0)}</td>
+              <td class="num">${fmtMoney(m.cpm || 0)}</td>
               <td class="num">${fmtNum(m.results || 0)}</td>
-              <td class="num">${m.cpr > 0 ? fmtMoney(m.cpr) : '—'}</td>
+              <td class="num">${m.cpr > 0 ? fmtMoney(m.cpr) : 'â€”'}</td>
             </tr>
           </tfoot>
         </table>
       </div>
     `;
 
-    // Charts
-    ['meta-spend','meta-conv','meta-place','meta-placeconv'].forEach(destroyChart);
-    if (camps.length > 0) {
-      state.charts['meta-spend'] = new Chart(document.getElementById('chart-meta-spend').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: camps.map(c => truncate(c.name, 18)),
-          datasets: [{
-            label: 'Inversión (USD)',
-            data: camps.map(c => c.spend),
-            backgroundColor: '#4267B2', borderRadius: 4
-          }]
-        },
-        options: barOpts({ currency: true })
+    // Wire collapsible rows
+    document.querySelectorAll('#meta-content .expand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        const wasExpanded = btn.classList.contains('expanded');
+        btn.classList.toggle('expanded');
+        btn.textContent = wasExpanded ? 'â–¶' : 'â–¶'; // arrow visual via CSS rotate
+        // If we expand a campaign: show ad-sets but keep their sub-ads collapsed
+        if (target.indexOf('camp-') === 0) {
+          const childAdsets = document.querySelectorAll('#meta-content tr.row-adset.' + target);
+          childAdsets.forEach(r => {
+            if (wasExpanded) {
+              r.classList.add('collapsed');
+              // Also collapse any expanded children
+              const subBtn = r.querySelector('.expand-btn');
+              if (subBtn) { subBtn.classList.remove('expanded'); }
+              document.querySelectorAll('#meta-content tr.row-ad.' + target).forEach(ad => ad.classList.add('collapsed'));
+            } else {
+              r.classList.remove('collapsed');
+            }
+          });
+        } else if (target.indexOf('asg-') === 0) {
+          const childAds = document.querySelectorAll('#meta-content tr.row-ad.' + target);
+          childAds.forEach(r => r.classList.toggle('collapsed', wasExpanded));
+        }
       });
-      state.charts['meta-conv'] = new Chart(document.getElementById('chart-meta-conv').getContext('2d'), {
-        type: 'bar',
+    });
+
+    // Charts: monthly evolution (replaces old bar charts)
+    ['meta-conv-monthly','meta-cpa-monthly','meta-place','meta-placeconv'].forEach(destroyChart);
+    if (monthly.length) {
+      state.charts['meta-conv-monthly'] = new Chart(document.getElementById('chart-meta-conv-monthly').getContext('2d'), {
+        type: 'line',
         data: {
-          labels: camps.map(c => truncate(c.name, 18)),
+          labels: monthly.map(d => fmtMonthLabel(d.month)),
           datasets: [{
             label: 'Conversiones',
-            data: camps.map(c => c.results),
-            backgroundColor: CONFIG.CHART_COLORS.lime, borderRadius: 4
+            data: monthly.map(d => d.conversions),
+            borderColor: CONFIG.CHART_COLORS.lime,
+            backgroundColor: 'rgba(204,255,68,0.12)',
+            borderWidth: 2.5, tension: 0.3, fill: true,
+            pointRadius: 3.5, pointBackgroundColor: CONFIG.CHART_COLORS.lime
           }]
         },
-        options: barOpts({ valueFmt: 'num' })
+        options: lineOpts({ currency: false })
+      });
+      state.charts['meta-cpa-monthly'] = new Chart(document.getElementById('chart-meta-cpa-monthly').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: monthly.map(d => fmtMonthLabel(d.month)),
+          datasets: [{
+            label: 'CPA',
+            data: monthly.map(d => d.cpa),
+            borderColor: '#FF8C42',
+            backgroundColor: 'rgba(255,140,66,0.10)',
+            borderWidth: 2.5, tension: 0.3, fill: true,
+            pointRadius: 3.5, pointBackgroundColor: '#FF8C42'
+          }]
+        },
+        options: lineOpts({ currency: true })
       });
     }
     if (places.length > 0) {
@@ -781,7 +924,7 @@
           labels: places.map(p => p.name),
           datasets: [{
             data: places.map(p => p.spend),
-            backgroundColor: ['#4267B2', '#E1306C', '#34A853', '#FBBC05', '#888'],
+            backgroundColor: PLACEHOLDER_PALETTE,
             borderWidth: 0
           }]
         },
@@ -793,11 +936,11 @@
           labels: places.map(p => p.name),
           datasets: [{
             data: places.map(p => p.results),
-            backgroundColor: ['#4267B2', '#E1306C', '#34A853', '#FBBC05', '#888'],
+            backgroundColor: PLACEHOLDER_PALETTE,
             borderWidth: 0
           }]
         },
-        options: doughnutOpts()
+        options: doughnutOpts({ fmt: fmtNum })  // conversions count, not money
       });
     }
   }
@@ -806,64 +949,117 @@
     const g = state.data.google;
     if (!g) return;
     if (g.error) {
-      document.getElementById('google-content').innerHTML = `<div class="error">⚠ Google Ads API: ${g.error}</div>`;
+      document.getElementById('google-content').innerHTML = `<div class="error">âš  Google Ads API: ${g.error}</div>`;
       return;
     }
     const camps = (g.campaigns || []).slice(0, 10);
     const dr = getDateRange(state.period);
+    const monthly = state.data.googleMonthly || [];
+    const hier = state.data.googleHier || { adGroupsByCamp: {}, adsByGroup: {}, campStatus: {} };
 
-    const tableRows = (g.campaigns || []).map(c => `
-      <tr>
-        <td>${escHtml(c.name || '—')}</td>
-        <td class="num">${fmtMoney(c.spend)}</td>
-        <td class="num">${fmtNum(c.impressions)}</td>
-        <td class="num">${fmtNum(c.clicks)}</td>
-        <td class="num">${fmtPct(c.ctr || 0)}</td>
-        <td class="num">${fmtNum(c.conversions)}</td>
-        <td class="num">${c.cpa > 0 ? fmtMoney(c.cpa) : '—'}</td>
-      </tr>
-    `).join('');
+    // Build hierarchical drill-down rows
+    let tbodyRows = '';
+    (g.campaigns || []).forEach(c => {
+      const ags = hier.adGroupsByCamp[c.id] || [];
+      const cpm = c.impressions ? c.spend / c.impressions * 1000 : 0;
+      tbodyRows += `
+        <tr class="row-campaign" data-cid="${escHtml(c.id)}">
+          <td class="lbl-cell">
+            ${ags.length ? `<span class="expand-btn" data-target="gcamp-${escHtml(c.id)}">â–¶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+            <strong>${escHtml(c.name || 'â€”')}</strong> ${googleStatusBadge(hier.campStatus[c.id])}
+          </td>
+          <td class="num">${fmtMoney(c.spend)}</td>
+          <td class="num">${fmtNum(c.impressions)}</td>
+          <td class="num">${fmtNum(c.clicks)}</td>
+          <td class="num">${fmtPct(c.ctr || 0)}</td>
+          <td class="num">${fmtMoney(cpm)}</td>
+          <td class="num">${fmtNum(c.conversions)}</td>
+          <td class="num">${c.cpa > 0 ? fmtMoney(c.cpa) : 'â€”'}</td>
+        </tr>`;
+      ags.forEach(ag => {
+        const ads = hier.adsByGroup[ag.id] || [];
+        tbodyRows += `
+          <tr class="row-adset collapsed gcamp-${escHtml(c.id)}" data-agid="${escHtml(ag.id)}">
+            <td class="lbl-cell">
+              ${ads.length ? `<span class="expand-btn" data-target="gag-${escHtml(ag.id)}">â–¶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+              ${escHtml(ag.name || 'â€”')} ${googleStatusBadge(ag.status)}
+            </td>
+            <td class="num">${fmtMoney(ag.spend)}</td>
+            <td class="num">${fmtNum(ag.impressions)}</td>
+            <td class="num">${fmtNum(ag.clicks)}</td>
+            <td class="num">${fmtPct(ag.ctr || 0)}</td>
+            <td class="num">${fmtMoney(ag.cpm || 0)}</td>
+            <td class="num">${fmtNum(ag.conversions)}</td>
+            <td class="num">${ag.cpa > 0 ? fmtMoney(ag.cpa) : 'â€”'}</td>
+          </tr>`;
+        ads.forEach(ad => {
+          tbodyRows += `
+            <tr class="row-ad collapsed gcamp-${escHtml(c.id)} gag-${escHtml(ag.id)}" data-aid="${escHtml(ad.id)}">
+              <td class="lbl-cell">${googleAdPreviewHtml(ad)}</td>
+              <td class="num">${fmtMoney(ad.spend)}</td>
+              <td class="num">${fmtNum(ad.impressions)}</td>
+              <td class="num">${fmtNum(ad.clicks)}</td>
+              <td class="num">${fmtPct(ad.ctr || 0)}</td>
+              <td class="num">${fmtMoney(ad.cpm || 0)}</td>
+              <td class="num">${fmtNum(ad.conversions)}</td>
+              <td class="num">${ad.cpa > 0 ? fmtMoney(ad.cpa) : 'â€”'}</td>
+            </tr>`;
+        });
+      });
+    });
 
     document.getElementById('google-content').innerHTML = `
       <div class="kpi-grid">
-        ${kpiCard('Inversión', fmtMoney(g.spend), `Período ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('InversiÃ³n', fmtMoney(g.spend), `PerÃ­odo ${dr.since} â†’ ${dr.until}`, true)}
         ${kpiCard('Impresiones', fmtNum(g.impressions), `CPM ${fmtMoney(g.cpm || 0)}`)}
-        ${kpiCard('Clicks', fmtNum(g.clicks), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
+        ${kpiCard('Clicks', fmtNum(g.clicks), `CTR ${fmtPct(g.ctr || 0)} Â· CPC ${fmtMoney(g.cpc || 0)}`)}
         ${kpiCard('Conversiones', fmtNum(g.conversions || 0), 'Total tracked')}
-        ${kpiCard('CPA', g.cpa > 0 ? fmtMoney(g.cpa) : '—', 'Costo por conversión')}
-        ${kpiCard('Campañas activas', fmtNum(g.campaigns.length), `Top: ${truncate(g.campaigns[0]?.name || '—', 22)}`)}
+        ${kpiCard('CPA', g.cpa > 0 ? fmtMoney(g.cpa) : 'â€”', 'Costo por conversiÃ³n')}
+        ${kpiCard('CampaÃ±as activas', fmtNum(g.campaigns.length), `Top: ${truncate(g.campaigns[0]?.name || 'â€”', 22)}`)}
       </div>
-      <div class="section-header">RESULTADOS POR CAMPAÑA</div>
+      <div class="section-header">EVOLUCIÃ“N MENSUAL Â· ÃšLTIMOS ${CONFIG.MONTHLY_LOOKBACK} MESES</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Conversiones por campaña (top 10)</div>
+          <div class="chart-title">Conversiones mes a mes</div>
+          <div class="chart-canvas"><canvas id="chart-google-conv-monthly"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-title">CPA mes a mes</div>
+          <div class="chart-canvas"><canvas id="chart-google-cpa-monthly"></canvas></div>
+        </div>
+      </div>
+      <div class="section-header">RESULTADOS POR CAMPAÃ‘A</div>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-title">Conversiones por campaÃ±a (top 10)</div>
           <div class="chart-canvas"><canvas id="chart-google-conv"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">Inversión por campaña (top 10)</div>
+          <div class="chart-title">InversiÃ³n por campaÃ±a (top 10)</div>
           <div class="chart-canvas"><canvas id="chart-google-spend"></canvas></div>
         </div>
       </div>
-      <div class="section-header">EFICIENCIA · COSTO Y COSTO/CONVERSIÓN</div>
+      <div class="section-header">EFICIENCIA Â· COSTO Y COSTO/CONVERSIÃ“N</div>
       <div class="chart-block">
-        <div class="chart-title">Coste vs. Coste por conversión por campaña (top 10)</div>
+        <div class="chart-title">Coste vs. Coste por conversiÃ³n por campaÃ±a (top 10)</div>
         <div class="chart-canvas" style="height:320px;"><canvas id="chart-google-combo"></canvas></div>
       </div>
-      <div class="section-header">DETALLE DE CAMPAÑAS</div>
+      <div class="section-header">DETALLE Â· CAMPAÃ‘A â–¸ AD GROUP â–¸ ANUNCIO</div>
       <div class="table-wrap">
         <table class="report-table">
           <thead>
             <tr>
-              <th>Campaña</th>
-              <th class="num">Inversión</th>
+              <th>CampaÃ±a / Ad Group / Anuncio</th>
+              <th class="num">InversiÃ³n</th>
               <th class="num">Impresiones</th>
               <th class="num">Clicks</th>
               <th class="num">CTR</th>
+              <th class="num">CPM</th>
               <th class="num">Conv.</th>
               <th class="num">CPA</th>
             </tr>
           </thead>
-          <tbody>${tableRows || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el perÃ­odo</td></tr>'}</tbody>
           <tfoot>
             <tr>
               <td>TOTAL</td>
@@ -871,16 +1067,72 @@
               <td class="num">${fmtNum(g.impressions)}</td>
               <td class="num">${fmtNum(g.clicks)}</td>
               <td class="num">${fmtPct(g.ctr || 0)}</td>
+              <td class="num">${fmtMoney(g.cpm || 0)}</td>
               <td class="num">${fmtNum(g.conversions)}</td>
-              <td class="num">${g.cpa > 0 ? fmtMoney(g.cpa) : '—'}</td>
+              <td class="num">${g.cpa > 0 ? fmtMoney(g.cpa) : 'â€”'}</td>
             </tr>
           </tfoot>
         </table>
       </div>
     `;
 
+    // Wire collapsible rows
+    document.querySelectorAll('#google-content .expand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        const wasExpanded = btn.classList.contains('expanded');
+        btn.classList.toggle('expanded');
+        if (target.indexOf('gcamp-') === 0) {
+          document.querySelectorAll('#google-content tr.row-adset.' + target).forEach(r => {
+            if (wasExpanded) {
+              r.classList.add('collapsed');
+              const subBtn = r.querySelector('.expand-btn');
+              if (subBtn) subBtn.classList.remove('expanded');
+              document.querySelectorAll('#google-content tr.row-ad.' + target).forEach(a => a.classList.add('collapsed'));
+            } else {
+              r.classList.remove('collapsed');
+            }
+          });
+        } else if (target.indexOf('gag-') === 0) {
+          document.querySelectorAll('#google-content tr.row-ad.' + target).forEach(r => r.classList.toggle('collapsed', wasExpanded));
+        }
+      });
+    });
+
     // Charts
-    ['google-conv','google-spend','google-combo'].forEach(destroyChart);
+    ['google-conv-monthly','google-cpa-monthly','google-conv','google-spend','google-combo'].forEach(destroyChart);
+    if (monthly.length) {
+      state.charts['google-conv-monthly'] = new Chart(document.getElementById('chart-google-conv-monthly').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: monthly.map(d => fmtMonthLabel(d.month)),
+          datasets: [{
+            label: 'Conversiones',
+            data: monthly.map(d => d.conversions),
+            borderColor: CONFIG.CHART_COLORS.lime,
+            backgroundColor: 'rgba(204,255,68,0.12)',
+            borderWidth: 2.5, tension: 0.3, fill: true,
+            pointRadius: 3.5, pointBackgroundColor: CONFIG.CHART_COLORS.lime
+          }]
+        },
+        options: lineOpts({ currency: false })
+      });
+      state.charts['google-cpa-monthly'] = new Chart(document.getElementById('chart-google-cpa-monthly').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: monthly.map(d => fmtMonthLabel(d.month)),
+          datasets: [{
+            label: 'CPA',
+            data: monthly.map(d => d.cpa),
+            borderColor: '#FF8C42',
+            backgroundColor: 'rgba(255,140,66,0.10)',
+            borderWidth: 2.5, tension: 0.3, fill: true,
+            pointRadius: 3.5, pointBackgroundColor: '#FF8C42'
+          }]
+        },
+        options: lineOpts({ currency: true })
+      });
+    }
     if (camps.length > 0) {
       state.charts['google-conv'] = new Chart(document.getElementById('chart-google-conv').getContext('2d'), {
         type: 'bar',
@@ -899,7 +1151,7 @@
         data: {
           labels: camps.map(c => truncate(c.name, 18)),
           datasets: [{
-            label: 'Inversión',
+            label: 'InversiÃ³n',
             data: camps.map(c => c.spend),
             backgroundColor: '#4285F4', borderRadius: 4
           }]
@@ -912,10 +1164,11 @@
           labels: camps.map(c => truncate(c.name, 18)),
           datasets: [
             {
-              label: 'Inversión (USD)',
+              label: 'InversiÃ³n (USD)',
               data: camps.map(c => c.spend),
               backgroundColor: '#4285F4', borderRadius: 4,
-              yAxisID: 'y'
+              yAxisID: 'y',
+              order: 2          // bar drawn first (under)
             },
             {
               label: 'CPA (USD)',
@@ -923,9 +1176,11 @@
               data: camps.map(c => c.cpa || 0),
               borderColor: CONFIG.CHART_COLORS.lime,
               backgroundColor: 'transparent',
-              borderWidth: 3, tension: 0.3, pointRadius: 4,
+              borderWidth: 3, tension: 0.3, pointRadius: 5,
               pointBackgroundColor: CONFIG.CHART_COLORS.lime,
-              yAxisID: 'y1'
+              pointBorderColor: '#000', pointBorderWidth: 1.5,
+              yAxisID: 'y1',
+              order: 0          // line drawn last (on top)
             }
           ]
         },
@@ -980,7 +1235,9 @@
     };
     return base;
   }
-  function doughnutOpts() {
+  function doughnutOpts(opts) {
+    opts = opts || {};
+    const fmt = opts.fmt || fmtMoney; // pass {fmt: fmtNum} for non-monetary donuts
     const base = baseChartOpts();
     base.cutout = '60%';
     base.plugins.legend.position = 'bottom';
@@ -989,7 +1246,32 @@
         const v = ctx.parsed;
         const total = ctx.dataset.data.reduce((s, d) => s + d, 0);
         const pct = total ? (v/total*100).toFixed(1) : 0;
-        return ctx.label + ': ' + fmtMoney(v) + ' (' + pct + '%)';
+        return ctx.label + ': ' + fmt(v) + ' (' + pct + '%)';
+      }
+    };
+    return base;
+  }
+  // Line chart for monthly evolution
+  function lineOpts(opts) {
+    opts = opts || {};
+    const isMoney = !!opts.currency;
+    const base = baseChartOpts();
+    base.plugins.legend.display = false;
+    base.plugins.tooltip.callbacks = {
+      label: ctx => isMoney ? fmtMoney(ctx.parsed.y) : fmtNum(ctx.parsed.y)
+    };
+    base.scales = {
+      x: {
+        ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 } },
+        grid: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: CONFIG.CHART_COLORS.textColor, font: { size: 10 },
+          callback: v => isMoney ? '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) : fmtNum(v)
+        },
+        grid: { color: CONFIG.CHART_COLORS.gridLine }
       }
     };
     return base;
@@ -1005,7 +1287,7 @@
         position: 'left',
         ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 }, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) },
         grid: { color: CONFIG.CHART_COLORS.gridLine },
-        title: { display: true, text: 'Inversión', color: '#888', font: { size: 10 } }
+        title: { display: true, text: 'InversiÃ³n', color: '#888', font: { size: 10 } }
       },
       y1: {
         position: 'right',
@@ -1025,7 +1307,411 @@
   }
   function truncate(s, n) {
     s = String(s || '');
-    return s.length > n ? s.slice(0, n - 1) + '…' : s;
+    return s.length > n ? s.slice(0, n - 1) + 'â€¦' : s;
+  }
+  // Format Meta placement granularity â†’ "Instagram Â· Stories"
+  function formatPlacementLabel(publisher, position) {
+    const pubMap = {
+      facebook: 'Facebook', instagram: 'Instagram',
+      messenger: 'Messenger', audience_network: 'Audience Network',
+      threads: 'Threads', whatsapp: 'WhatsApp'
+    };
+    const posMap = {
+      feed: 'Feed', story: 'Stories', stories: 'Stories',
+      reels: 'Reels', explore: 'Explore', search: 'Search',
+      instream_video: 'In-stream Video', video_feeds: 'Video Feed',
+      facebook_reels: 'FB Reels', facebook_stories: 'FB Stories',
+      instagram_reels: 'IG Reels', instagram_explore: 'IG Explore',
+      instagram_stories: 'IG Stories',
+      marketplace: 'Marketplace', right_hand_column: 'Right Column',
+      biz_disco_feed: 'Business Discovery', biz_inbox: 'Business Inbox',
+      messenger_inbox: 'Inbox', messenger_stories: 'Messenger Stories',
+      messenger_home: 'Messenger Home',
+      classic: 'Network', rewarded_video: 'Rewarded Video',
+      instream_video_skippable: 'In-stream Skippable',
+      groups: 'Groups', notification: 'Notification',
+      jobs_browser: 'Jobs', status: 'WhatsApp Status'
+    };
+    const pub = pubMap[publisher] || publisher || '?';
+    const pos = posMap[position] || position || '?';
+    return pub + ' Â· ' + pos;
+  }
+  // YYYY-MM â†’ "Jun '26" (compact x-axis labels)
+  function fmtMonthLabel(ym) {
+    if (!ym || ym.length < 7) return '?';
+    const [y, m] = ym.split('-');
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return (months[parseInt(m, 10) - 1] || m) + " '" + y.slice(2);
+  }
+  // Status normalization for Meta `effective_status` â†’ on/off/review badge
+  function metaStatusBadge(eff) {
+    if (eff === 'ACTIVE') return '<span class="status-badge on">ON</span>';
+    if (['PAUSED','CAMPAIGN_PAUSED','ADSET_PAUSED','DISAPPROVED','ARCHIVED','DELETED'].indexOf(eff) >= 0) {
+      return '<span class="status-badge off">OFF</span>';
+    }
+    if (['PENDING_REVIEW','IN_REVIEW','PENDING_BILLING_INFO','WITH_ISSUES'].indexOf(eff) >= 0) {
+      return '<span class="status-badge review">' + (eff || 'REVIEW').replace(/_/g,' ') + '</span>';
+    }
+    return '<span class="status-badge off">' + (eff || '?').replace(/_/g,' ') + '</span>';
+  }
+  // Status for Google Ads (`ENABLED` / `PAUSED` / `REMOVED`)
+  function googleStatusBadge(s) {
+    if (s === 'ENABLED' || s === 2) return '<span class="status-badge on">ENABLED</span>';
+    if (s === 'PAUSED'  || s === 3) return '<span class="status-badge off">PAUSED</span>';
+    if (s === 'REMOVED' || s === 4) return '<span class="status-badge off">REMOVED</span>';
+    return '<span class="status-badge review">' + (s || '?') + '</span>';
+  }
+  // Render a Meta ad preview: image thumbnail or fallback
+  function metaAdPreviewHtml(ad, hashUrlMap) {
+    const url = pickMetaAdImage(ad, hashUrlMap);
+    if (url) {
+      return '<div class="ad-preview"><img class="ad-thumb" src="' + escHtml(url) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /><span class="ad-name">' + escHtml(truncate(ad.name || 'â€”', 38)) + '</span>' + metaStatusBadge(ad.effective_status) + '</div>';
+    }
+    return '<div class="ad-preview"><div class="ad-thumb fallback">ðŸ–¼</div><span class="ad-name">' + escHtml(truncate(ad.name || 'â€”', 38)) + '</span>' + metaStatusBadge(ad.effective_status) + '</div>';
+  }
+  // Picks best image URL per CLAUDE.md priority chain
+  function pickMetaAdImage(ad, hashUrlMap) {
+    hashUrlMap = hashUrlMap || {};
+    const c = ad.creative || {};
+    const story = c.object_story_spec || {};
+    const link = story.link_data || {};
+    const video = story.video_data || {};
+    const feed = c.asset_feed_spec || {};
+    if (link.image_hash && hashUrlMap[link.image_hash])  return hashUrlMap[link.image_hash];
+    if (video.image_url) return video.image_url;
+    if (link.picture)    return link.picture;
+    if (c.image_url)     return c.image_url;
+    if (feed.images && feed.images.length) {
+      for (const img of feed.images) {
+        if (img.hash && hashUrlMap[img.hash]) return hashUrlMap[img.hash];
+        if (img.url) return img.url;
+      }
+    }
+    if (c.thumbnail_url) return c.thumbnail_url;
+    return null;
+  }
+  // Collect all hashes referenced from a list of creatives â€” batch /adimages call
+  function collectImageHashes(ads) {
+    const hashes = new Set();
+    ads.forEach(ad => {
+      const c = ad.creative || {};
+      const link = (c.object_story_spec || {}).link_data || {};
+      const feed = c.asset_feed_spec || {};
+      if (link.image_hash) hashes.add(link.image_hash);
+      if (feed.images && feed.images.length) {
+        feed.images.forEach(i => { if (i.hash) hashes.add(i.hash); });
+      }
+    });
+    return [...hashes];
+  }
+  // Render a Google ad preview based on ad.type
+  function googleAdPreviewHtml(ad) {
+    const t = ad.type || ad.adType || '';
+    const status = googleStatusBadge(ad.status);
+    if (t === 'RESPONSIVE_SEARCH_AD' || t === 'TEXT_AD' || t === 'EXPANDED_TEXT_AD' || t === 'SEARCH_AD') {
+      const rsa = ad.responsive_search_ad || ad.responsiveSearchAd || {};
+      const headlines = (rsa.headlines || []).slice(0, 3).map(h => escHtml(h.text || '')).filter(Boolean).join(' Â· ') || 'â€”';
+      const desc = (rsa.descriptions || [])[0]?.text || ad.name || '';
+      const host = (ad.final_urls || ad.finalUrls || ['renewfinancial.com'])[0] || '';
+      let dom = '';
+      try { dom = new URL(host.startsWith('http') ? host : 'https://' + host).hostname; }
+      catch(e) { dom = host; }
+      return '<div class="ad-preview"><div class="ad-rsa"><div class="rsa-host">Anuncio Â· ' + escHtml(dom) + '</div><div class="rsa-headline">' + headlines + '</div><div class="rsa-desc">' + escHtml(truncate(desc, 90)) + '</div></div>' + status + '</div>';
+    }
+    if (t === 'IMAGE_AD' || t === 'RESPONSIVE_DISPLAY_AD' || t === 'DISPLAY_UPLOAD_AD') {
+      const img = (ad.image_ad && ad.image_ad.image_url) || (ad.imageAd && ad.imageAd.imageUrl);
+      if (img) return '<div class="ad-preview"><img class="ad-thumb" src="' + escHtml(img) + '" alt="" loading="lazy" /><span class="ad-name">' + escHtml(truncate(ad.name || 'Display ad', 38)) + '</span>' + status + '</div>';
+    }
+    if (t === 'VIDEO_AD' || t === 'VIDEO_RESPONSIVE_AD') {
+      const v = ad.video_ad || ad.videoAd || {};
+      const tn = v.youtube_video_id ? 'https://i.ytimg.com/vi/' + v.youtube_video_id + '/hqdefault.jpg' : '';
+      if (tn) return '<div class="ad-preview"><img class="ad-thumb" src="' + tn + '" alt="" loading="lazy" /><span class="ad-name">' + escHtml(truncate(ad.name || 'Video ad', 38)) + '</span>' + status + '</div>';
+    }
+    return '<div class="ad-preview"><div class="ad-thumb fallback">ðŸ“„</div><span class="ad-name">' + escHtml(truncate(ad.name || t || 'Ad', 38)) + '</span>' + status + '</div>';
+  }
+
+  // ============================================================
+  // MONTHLY EVOLUTION FETCHERS (fixed last 12 months, period-independent)
+  // ============================================================
+  function monthlyDateRange() {
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(start.getMonth() - (CONFIG.MONTHLY_LOOKBACK - 1));
+    start.setDate(1);
+    return {
+      since: start.toISOString().slice(0, 10),
+      until: end.toISOString().slice(0, 10)
+    };
+  }
+  async function fetchMetaMonthly() {
+    const dr = monthlyDateRange();
+    const url = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    url.searchParams.set('fields', 'spend,actions');
+    url.searchParams.set('time_range', JSON.stringify(dr));
+    url.searchParams.set('time_increment', 'monthly');
+    url.searchParams.set('limit', '500');
+    url.searchParams.set('access_token', '__PROXY__');
+    const res = await fetch(url).then(r => r.json()).catch(() => ({ data: [] }));
+    return (res?.data || []).map(d => {
+      const conv = resultsFromActions(d.actions);
+      const spend = parseFloat(d.spend || 0);
+      return {
+        month: (d.date_start || '').slice(0, 7),
+        spend,
+        conversions: conv,
+        cpa: conv > 0 ? spend / conv : 0
+      };
+    }).filter(x => x.month);
+  }
+  async function fetchGoogleMonthly() {
+    const dr = monthlyDateRange();
+    const query =
+      "SELECT segments.month, metrics.cost_micros, metrics.conversions " +
+      "FROM customer " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "' " +
+      "ORDER BY segments.month ASC";
+    const url = CONFIG.API_BASE + '/google-ads/customers/' + CONFIG.GOOGLE_ID + '/googleAds:search';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-login-customer-id': CONFIG.GOOGLE_MCC },
+      body: JSON.stringify({ query })
+    }).then(r => r.json()).catch(() => ({ results: [] }));
+    const buckets = {};
+    (res.results || []).forEach(r => {
+      const m = (r.segments?.month || '').slice(0, 7);
+      if (!m) return;
+      if (!buckets[m]) buckets[m] = { month: m, spend: 0, conversions: 0 };
+      buckets[m].spend       += parseFloat(r.metrics?.costMicros || 0) / 1e6;
+      buckets[m].conversions += parseFloat(r.metrics?.conversions || 0);
+    });
+    return Object.values(buckets)
+      .sort((a, b) => a.month.localeCompare(b.month))
+      .map(b => ({ ...b, cpa: b.conversions > 0 ? b.spend / b.conversions : 0 }));
+  }
+
+  // ============================================================
+  // HIERARCHY FETCHERS (campaign â†’ adset/group â†’ ad)
+  // ============================================================
+  async function fetchMetaHierarchy(period) {
+    const dr = getDateRange(period);
+    // Adset-level insights
+    const aUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    aUrl.searchParams.set('fields', 'campaign_id,adset_id,adset_name,spend,impressions,clicks,ctr,cpm,actions');
+    aUrl.searchParams.set('level', 'adset');
+    aUrl.searchParams.set('time_range', JSON.stringify(dr));
+    aUrl.searchParams.set('limit', '500');
+    aUrl.searchParams.set('access_token', '__PROXY__');
+    // Ad-level insights
+    const adUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    adUrl.searchParams.set('fields', 'campaign_id,adset_id,ad_id,ad_name,spend,impressions,clicks,ctr,cpm,actions');
+    adUrl.searchParams.set('level', 'ad');
+    adUrl.searchParams.set('time_range', JSON.stringify(dr));
+    adUrl.searchParams.set('limit', '500');
+    adUrl.searchParams.set('access_token', '__PROXY__');
+    // Ad metadata (status + creative)
+    const adsMetaUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/ads');
+    adsMetaUrl.searchParams.set('fields', 'id,name,status,effective_status,adset_id,campaign_id,creative{id,thumbnail_url,image_url,image_hash,object_story_spec{link_data{image_hash,picture},video_data{image_url,image_hash}},asset_feed_spec{images{hash}}}');
+    adsMetaUrl.searchParams.set('limit', '500');
+    adsMetaUrl.searchParams.set('access_token', '__PROXY__');
+    // Adset status
+    const adsetsMetaUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/adsets');
+    adsetsMetaUrl.searchParams.set('fields', 'id,name,status,effective_status,campaign_id');
+    adsetsMetaUrl.searchParams.set('limit', '500');
+    adsetsMetaUrl.searchParams.set('access_token', '__PROXY__');
+    // Campaign status
+    const campsMetaUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/campaigns');
+    campsMetaUrl.searchParams.set('fields', 'id,name,status,effective_status');
+    campsMetaUrl.searchParams.set('limit', '500');
+    campsMetaUrl.searchParams.set('access_token', '__PROXY__');
+
+    const [adsetRes, adRes, adsMeta, adsetsMeta, campsMeta] = await Promise.all([
+      fetch(aUrl).then(r => r.json()).catch(() => null),
+      fetch(adUrl).then(r => r.json()).catch(() => null),
+      fetch(adsMetaUrl).then(r => r.json()).catch(() => null),
+      fetch(adsetsMetaUrl).then(r => r.json()).catch(() => null),
+      fetch(campsMetaUrl).then(r => r.json()).catch(() => null)
+    ]);
+
+    // Batch-fetch image hashes (single /adimages call)
+    const adsRaw = (adsMeta?.data || []);
+    const hashes = collectImageHashes(adsRaw);
+    let hashUrlMap = {};
+    if (hashes.length) {
+      const imgUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/adimages');
+      imgUrl.searchParams.set('hashes', JSON.stringify(hashes));
+      imgUrl.searchParams.set('fields', 'hash,url,permalink_url');
+      imgUrl.searchParams.set('access_token', '__PROXY__');
+      const imgRes = await fetch(imgUrl).then(r => r.json()).catch(() => null);
+      (imgRes?.data || []).forEach(img => {
+        if (img.hash) hashUrlMap[img.hash] = img.url || img.permalink_url;
+      });
+    }
+
+    const campStatus = {};
+    (campsMeta?.data || []).forEach(c => { campStatus[c.id] = c.effective_status; });
+    const adsetStatus = {};
+    const adsetName = {};
+    (adsetsMeta?.data || []).forEach(a => { adsetStatus[a.id] = a.effective_status; adsetName[a.id] = a.name; });
+
+    const ads = adsRaw.map(a => ({
+      id: a.id,
+      name: a.name,
+      adset_id: a.adset_id,
+      campaign_id: a.campaign_id,
+      effective_status: a.effective_status,
+      creative: a.creative || {}
+    }));
+
+    const adsetsMetricsByCamp = {};
+    (adsetRes?.data || []).forEach(r => {
+      const cid = r.campaign_id;
+      if (!adsetsMetricsByCamp[cid]) adsetsMetricsByCamp[cid] = [];
+      adsetsMetricsByCamp[cid].push({
+        id: r.adset_id,
+        name: r.adset_name || adsetName[r.adset_id] || 'â€”',
+        effective_status: adsetStatus[r.adset_id] || 'ACTIVE',
+        spend:       parseFloat(r.spend || 0),
+        impressions: parseInt(r.impressions || 0, 10),
+        clicks:      parseInt(r.clicks || 0, 10),
+        ctr:         parseFloat(r.ctr || 0),
+        cpm:         parseFloat(r.cpm || 0),
+        results:     resultsFromActions(r.actions)
+      });
+    });
+    const adsMetricsByAdset = {};
+    (adRes?.data || []).forEach(r => {
+      const aid = r.adset_id;
+      if (!adsMetricsByAdset[aid]) adsMetricsByAdset[aid] = [];
+      const adMeta = ads.find(a => a.id === r.ad_id) || {};
+      adsMetricsByAdset[aid].push({
+        id: r.ad_id,
+        name: r.ad_name || adMeta.name || 'â€”',
+        effective_status: adMeta.effective_status || 'ACTIVE',
+        creative: adMeta.creative || {},
+        spend:       parseFloat(r.spend || 0),
+        impressions: parseInt(r.impressions || 0, 10),
+        clicks:      parseInt(r.clicks || 0, 10),
+        ctr:         parseFloat(r.ctr || 0),
+        cpm:         parseFloat(r.cpm || 0),
+        results:     resultsFromActions(r.actions)
+      });
+    });
+
+    return { adsetsMetricsByCamp, adsMetricsByAdset, campStatus, hashUrlMap };
+  }
+  async function fetchGoogleHierarchy(period) {
+    const dr = getDateRange(period);
+    // Ad group metrics with campaign info + ad_group status
+    const adGroupQuery =
+      "SELECT campaign.id, campaign.name, ad_group.id, ad_group.name, ad_group.status, " +
+      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
+      "metrics.average_cpm, metrics.conversions " +
+      "FROM ad_group " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+    // Ad-level metrics with full creative info
+    const adQuery =
+      "SELECT campaign.id, ad_group.id, ad_group_ad.ad.id, ad_group_ad.ad.name, " +
+      "ad_group_ad.ad.type, ad_group_ad.status, ad_group_ad.ad.final_urls, " +
+      "ad_group_ad.ad.responsive_search_ad.headlines, " +
+      "ad_group_ad.ad.responsive_search_ad.descriptions, " +
+      "ad_group_ad.ad.image_ad.image_url, " +
+      "ad_group_ad.ad.video_ad.video, " +
+      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
+      "metrics.average_cpm, metrics.conversions " +
+      "FROM ad_group_ad " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+    // Campaign status (separate query, just for status)
+    const campStatusQuery =
+      "SELECT campaign.id, campaign.status FROM campaign " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+
+    const baseUrl = CONFIG.API_BASE + '/google-ads/customers/' + CONFIG.GOOGLE_ID + '/googleAds:search';
+    const hdrs = { 'Content-Type': 'application/json', 'x-login-customer-id': CONFIG.GOOGLE_MCC };
+    const [agRes, adsRes, campRes] = await Promise.all([
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: adGroupQuery })}).then(r => r.json()).catch(() => null),
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: adQuery })}).then(r => r.json()).catch(() => null),
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: campStatusQuery })}).then(r => r.json()).catch(() => null)
+    ]);
+
+    const campStatus = {};
+    (campRes?.results || []).forEach(r => {
+      const cid = r.campaign?.id;
+      if (cid) campStatus[cid] = r.campaign.status;
+    });
+
+    const adGroupsByCamp = {};
+    (agRes?.results || []).forEach(r => {
+      const cid = r.campaign?.id;
+      const agid = r.ad_group?.id;
+      if (!cid || !agid) return;
+      if (!adGroupsByCamp[cid]) adGroupsByCamp[cid] = {};
+      if (!adGroupsByCamp[cid][agid]) {
+        adGroupsByCamp[cid][agid] = {
+          id: agid,
+          name: r.ad_group.name,
+          status: r.ad_group.status,
+          spend: 0, impressions: 0, clicks: 0, conversions: 0, cpmSum: 0, cpmRows: 0
+        };
+      }
+      const ag = adGroupsByCamp[cid][agid];
+      const m = r.metrics || {};
+      ag.spend       += parseFloat(m.costMicros || 0) / 1e6;
+      ag.impressions += parseInt(m.impressions || 0, 10);
+      ag.clicks      += parseInt(m.clicks || 0, 10);
+      ag.conversions += parseFloat(m.conversions || 0);
+      if (m.averageCpm) { ag.cpmSum += parseFloat(m.averageCpm) / 1e6; ag.cpmRows++; }
+    });
+
+    const adsByGroup = {};
+    (adsRes?.results || []).forEach(r => {
+      const agid = r.ad_group?.id;
+      if (!agid) return;
+      if (!adsByGroup[agid]) adsByGroup[agid] = {};
+      const ad = r.ad_group_ad?.ad || {};
+      const aid = ad.id;
+      if (!aid) return;
+      if (!adsByGroup[agid][aid]) {
+        adsByGroup[agid][aid] = {
+          id: aid,
+          name: ad.name || '',
+          type: ad.type,
+          status: r.ad_group_ad?.status,
+          final_urls: ad.finalUrls || ad.final_urls,
+          responsive_search_ad: ad.responsiveSearchAd || ad.responsive_search_ad,
+          image_ad: ad.imageAd || ad.image_ad,
+          video_ad: ad.videoAd || ad.video_ad,
+          spend: 0, impressions: 0, clicks: 0, conversions: 0
+        };
+      }
+      const a = adsByGroup[agid][aid];
+      const m = r.metrics || {};
+      a.spend       += parseFloat(m.costMicros || 0) / 1e6;
+      a.impressions += parseInt(m.impressions || 0, 10);
+      a.clicks      += parseInt(m.clicks || 0, 10);
+      a.conversions += parseFloat(m.conversions || 0);
+    });
+
+    // Normalize to arrays sorted by spend
+    const adGroupsByCampArr = {};
+    Object.keys(adGroupsByCamp).forEach(cid => {
+      adGroupsByCampArr[cid] = Object.values(adGroupsByCamp[cid]).map(ag => ({
+        ...ag,
+        ctr: ag.impressions ? (ag.clicks / ag.impressions * 100) : 0,
+        cpm: ag.cpmRows ? (ag.cpmSum / ag.cpmRows) : (ag.impressions ? ag.spend / ag.impressions * 1000 : 0),
+        cpa: ag.conversions ? (ag.spend / ag.conversions) : 0
+      })).sort((a, b) => b.spend - a.spend);
+    });
+    const adsByGroupArr = {};
+    Object.keys(adsByGroup).forEach(agid => {
+      adsByGroupArr[agid] = Object.values(adsByGroup[agid]).map(a => ({
+        ...a,
+        ctr: a.impressions ? (a.clicks / a.impressions * 100) : 0,
+        cpm: a.impressions ? a.spend / a.impressions * 1000 : 0,
+        cpa: a.conversions ? (a.spend / a.conversions) : 0
+      })).sort((a, b) => b.spend - a.spend);
+    });
+
+    return { adGroupsByCamp: adGroupsByCampArr, adsByGroup: adsByGroupArr, campStatus };
   }
 
   // ============================================================
@@ -1035,12 +1721,21 @@
     if (state.fetching) return;
     state.fetching = true;
     try {
-      const [m, g] = await Promise.all([
+      // Parallel: account-level + monthly evolution + drill-down hierarchy
+      const [m, g, mMonthly, gMonthly, mHier, gHier] = await Promise.all([
         fetchMeta(state.period).catch(e => ({ error: e.message })),
-        fetchGoogle(state.period).catch(e => ({ error: e.message }))
+        fetchGoogle(state.period).catch(e => ({ error: e.message })),
+        fetchMetaMonthly().catch(() => []),
+        fetchGoogleMonthly().catch(() => []),
+        fetchMetaHierarchy(state.period).catch(() => ({ adsetsMetricsByCamp:{}, adsMetricsByAdset:{}, hashUrlMap:{} })),
+        fetchGoogleHierarchy(state.period).catch(() => ({ adGroupsByCamp:{}, adsByGroup:{}, campStatus:{} }))
       ]);
-      state.data.meta = m;
-      state.data.google = g;
+      state.data.meta         = m;
+      state.data.google       = g;
+      state.data.metaMonthly  = mMonthly;
+      state.data.googleMonthly = gMonthly;
+      state.data.metaHier     = mHier;
+      state.data.googleHier   = gHier;
       destroyAllCharts();
       renderTotal();
       renderMeta();
@@ -1084,7 +1779,7 @@
     const status = document.getElementById('liveStatus');
     const statusText = document.getElementById('liveStatusText');
     if (state.liveOn) {
-      btn.textContent = '⏸ Pausar EN VIVO';
+      btn.textContent = 'â¸ Pausar EN VIVO';
       btn.classList.add('live-on');
       status.classList.add('active');
       statusText.textContent = 'EN VIVO';
@@ -1094,7 +1789,7 @@
       // Trigger immediate refresh too
       loadAll();
     } else {
-      btn.textContent = '🔴 Activar EN VIVO';
+      btn.textContent = 'ðŸ”´ Activar EN VIVO';
       btn.classList.remove('live-on');
       status.classList.remove('active');
       statusText.textContent = 'Pausado';
@@ -1105,7 +1800,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] Â· Pointer Marketing Digital Â· build 2026-06-09-v2 (hierarchical + monthly + previews)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
