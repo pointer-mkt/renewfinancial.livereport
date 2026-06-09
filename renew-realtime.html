@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Renew Financial · Reporte en Tiempo Real · Pointer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface-2: #1c1c1c;
+      --border: #2a2a2a;
+      --lime: #CCFF44;
+      --lime-soft: rgba(204,255,68,0.15);
+      --white: #F0F0F0;
+      --gray: #888;
+      --text-2: #b0b0b0;
+      --red: #FF4D6D;
+      --green: #10D879;
+      --orange: #FF8C42;
+    }
+    html, body {
+      background: var(--bg); color: var(--white);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 14px; line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 60px; }
+
+    /* ── Header ────────────────────────────── */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border);
+      margin-bottom: 22px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-logo {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: var(--lime); color: #000;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Audiowide', sans-serif; font-size: 22px; font-weight: 400;
+    }
+    .brand-text {
+      font-family: 'Audiowide', sans-serif; font-size: 16px; letter-spacing: 1px;
+      color: var(--white);
+    }
+    .brand-text .accent { color: var(--lime); }
+    .live-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--gray);
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--surface-2); border: 1px solid var(--border);
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gray);
+    }
+    .live-status.active .live-dot {
+      background: var(--lime);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--lime-soft); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+    }
+
+    /* ── Report title ─────────────────────── */
+    .report-title {
+      font-family: 'Audiowide', sans-serif; font-size: 28px;
+      color: var(--lime); letter-spacing: 1.2px;
+      margin-bottom: 4px;
+    }
+    .report-sub {
+      font-size: 12px; color: var(--gray); letter-spacing: 0.4px;
+      margin-bottom: 20px;
+    }
+
+    /* ── Controls bar ─────────────────────── */
+    .controls {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      padding: 14px 16px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 22px;
+    }
+    .period-group { display: inline-flex; gap: 4px; background: var(--surface-2); padding: 4px; border-radius: 8px; }
+    .period-btn {
+      background: transparent; border: none;
+      color: var(--gray); padding: 7px 14px; border-radius: 6px;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.3px; cursor: pointer; transition: all 0.15s;
+    }
+    .period-btn:hover { color: var(--white); }
+    .period-btn.active {
+      background: var(--lime); color: #000;
+      box-shadow: 0 2px 8px var(--lime-soft);
+    }
+    .ctrl-btn {
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--text-2); padding: 8px 14px; border-radius: 7px;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .ctrl-btn:hover { border-color: var(--lime); color: var(--lime); }
+    .ctrl-btn.live-on {
+      background: var(--lime); color: #000; border-color: var(--lime);
+    }
+    .ctrl-spacer { flex: 1; }
+    .last-update { font-size: 10.5px; color: var(--gray); white-space: nowrap; }
+
+    /* ── Tabs ─────────────────────────────── */
+    .tabs {
+      display: flex; gap: 4px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px; padding: 4px;
+      margin-bottom: 18px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .tab {
+      background: transparent; border: none; color: var(--gray);
+      padding: 12px 22px; border-radius: 7px;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.3px; cursor: pointer; transition: all 0.15s;
+      white-space: nowrap; flex: 1; min-width: max-content;
+    }
+    .tab:hover { color: var(--white); }
+    .tab.active {
+      background: var(--lime); color: #000;
+      box-shadow: 0 4px 14px var(--lime-soft);
+    }
+
+    /* ── KPI cards ────────────────────────── */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 22px;
+    }
+    .kpi-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px;
+      position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--lime);
+    }
+    .kpi-label {
+      font-size: 10px; color: var(--gray); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      margin-bottom: 8px;
+    }
+    .kpi-value {
+      font-family: 'Audiowide', sans-serif; font-size: 24px;
+      color: var(--white); line-height: 1;
+    }
+    .kpi-sub {
+      font-size: 11px; color: var(--text-2); margin-top: 6px;
+    }
+    .kpi-card.big .kpi-value { font-size: 32px; }
+    .kpi-card.big::before { background: linear-gradient(180deg, var(--lime), #88dd22); }
+
+    /* ── Section ──────────────────────────── */
+    .section-header {
+      background: var(--lime); color: #000;
+      padding: 10px 16px; border-radius: 8px;
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      margin: 24px 0 14px;
+    }
+    .chart-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px; margin-bottom: 16px;
+    }
+    .chart-title {
+      font-size: 12.5px; font-weight: 600; color: var(--text-2);
+      letter-spacing: 0.3px; margin-bottom: 14px;
+    }
+    .chart-canvas { position: relative; height: 280px; }
+    @media (max-width: 600px) { .chart-canvas { height: 220px; } }
+
+    /* ── Charts row (2 cols desktop) ──────── */
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 900px) { .charts-row { grid-template-columns: 1fr; } }
+
+    /* ── Table ────────────────────────────── */
+    .table-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 6px; overflow-x: auto;
+    }
+    table.report-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12px;
+    }
+    table.report-table thead th {
+      text-align: left; padding: 11px 14px;
+      font-size: 10px; color: var(--gray);
+      text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+    table.report-table thead th.num { text-align: right; }
+    table.report-table tbody td {
+      padding: 11px 14px; color: var(--text-2);
+      border-bottom: 1px solid rgba(42,42,42,0.5);
+    }
+    table.report-table tbody td.num { text-align: right; font-family: 'Inter', monospace; }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+    table.report-table tbody tr:hover { background: var(--surface-2); }
+    table.report-table tfoot td {
+      padding: 12px 14px; font-weight: 700; color: var(--white);
+      border-top: 2px solid var(--lime);
+      font-size: 13px;
+    }
+    table.report-table tfoot td.num { text-align: right; }
+
+    /* ── Loading / empty ──────────────────── */
+    .loading {
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 20px; color: var(--gray); font-size: 13px;
+    }
+    .spinner {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 3px solid var(--border); border-top-color: var(--lime);
+      animation: spin 0.8s linear infinite;
+      display: inline-block; margin-right: 12px; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty {
+      text-align: center; padding: 40px 20px;
+      color: var(--gray); font-size: 13px;
+      background: var(--surface); border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+    .error {
+      background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.3);
+      color: #FF8898; padding: 14px 18px; border-radius: 10px;
+      font-size: 12.5px;
+    }
+
+    /* ── Footer ───────────────────────────── */
+    .footer {
+      margin-top: 40px; padding-top: 18px;
+      border-top: 1px solid var(--border);
+      text-align: center; font-size: 11px; color: var(--gray);
+      line-height: 1.6;
+    }
+    .footer .accent { color: var(--lime); font-family: 'Audiowide', sans-serif; letter-spacing: 0.5px; }
+
+    /* ── Tab content visibility ───────────── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-logo">P</div>
+        <div>
+          <div class="brand-text"><span class="accent">POINTER</span> · MARKETING DIGITAL</div>
+          <div style="font-size:10px;color:var(--gray);letter-spacing:0.4px;margin-top:2px;">Real-time Performance Dashboard</div>
+        </div>
+      </div>
+      <div class="live-status" id="liveStatus">
+        <span class="live-dot"></span>
+        <span id="liveStatusText">Pausado</span>
+      </div>
+    </div>
+
+    <!-- Report title -->
+    <div class="report-title">RENEW FINANCIAL</div>
+    <div class="report-sub">Reporte de performance en tiempo real · Meta Ads + Google Ads</div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="period-group" id="periodGroup">
+        <button class="period-btn" data-period="today">Hoy</button>
+        <button class="period-btn active" data-period="7d">7 días</button>
+        <button class="period-btn" data-period="month">Mes actual</button>
+      </div>
+      <button class="ctrl-btn" id="liveBtn">🔴 Activar EN VIVO</button>
+      <button class="ctrl-btn" id="refreshBtn">🔄 Actualizar</button>
+      <div class="ctrl-spacer"></div>
+      <div class="last-update" id="lastUpdate">Esperando primera carga…</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="total">📊 TOTAL</button>
+      <button class="tab" data-tab="meta">🟦 META ADS</button>
+      <button class="tab" data-tab="google">🟢 GOOGLE ADS</button>
+    </div>
+
+    <!-- TOTAL Tab -->
+    <div class="tab-content active" id="tab-total">
+      <div id="total-content">
+        <div class="loading"><span class="spinner"></span>Cargando datos en vivo…</div>
+      </div>
+    </div>
+
+    <!-- META Tab -->
+    <div class="tab-content" id="tab-meta">
+      <div id="meta-content">
+        <div class="loading"><span class="spinner"></span>Cargando Meta Ads…</div>
+      </div>
+    </div>
+
+    <!-- GOOGLE Tab -->
+    <div class="tab-content" id="tab-google">
+      <div id="google-content">
+        <div class="loading"><span class="spinner"></span>Cargando Google Ads…</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      Dashboard generado por <span class="accent">POINTER</span> · Datos en tiempo real desde Meta Marketing API + Google Ads API<br/>
+      Auto-actualización cada 5 min cuando "EN VIVO" está activo · Última actualización: <span id="footerUpdate">—</span>
+    </div>
+
+  </div>
+
+  <script>
+  // ============================================================
+  // CONFIG — Renew Financial
+  // ============================================================
+  const CONFIG = {
+    API_BASE:   'https://actual-proxy.matiasdesiderio.workers.dev',
+    META_ACC:   'act_526263314232724',
+    GOOGLE_ID:  '9840734433',
+    GOOGLE_MCC: '4498330978',   // Pointer MCC
+    CURRENCY:   'USD',
+    LOCALE:     'en-US',
+    AUTOREFRESH_MS: 5 * 60 * 1000,  // 5 min
+    CHART_COLORS: {
+      meta:    ['#4267B2', '#5878C8', '#7390DC', '#8FA8EC', '#ACBFF5'],
+      google:  ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#46BDC6'],
+      lime:    '#CCFF44',
+      orange:  '#FF8C42',
+      red:     '#FF4D6D',
+      gridLine: 'rgba(255,255,255,0.06)',
+      textColor: '#888'
+    }
+  };
+
+  let state = {
+    period: '7d',           // 'today' | '7d' | 'month'
+    liveOn: false,
+    autoTimer: null,
+    fetching: false,
+    data: { meta: null, google: null },
+    charts: {}              // tracked Chart.js instances for cleanup
+  };
+
+  // ============================================================
+  // DATE HELPERS
+  // ============================================================
+  function getDateRange(period) {
+    const now = new Date();
+    const today = now.toISOString().slice(0, 10);
+    if (period === 'today')  return { since: today, until: today };
+    if (period === 'month') {
+      const first = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+      return { since: first, until: today };
+    }
+    // 7d default: today and 6 prior days
+    const d = new Date(now); d.setDate(d.getDate() - 6);
+    return { since: d.toISOString().slice(0, 10), until: today };
+  }
+  function fmtMoney(n) {
+    const v = Number(n || 0);
+    return new Intl.NumberFormat(CONFIG.LOCALE, {
+      style: 'currency', currency: CONFIG.CURRENCY,
+      maximumFractionDigits: v >= 100 ? 0 : 2
+    }).format(v);
+  }
+  function fmtNum(n) {
+    return new Intl.NumberFormat(CONFIG.LOCALE, {
+      maximumFractionDigits: 0
+    }).format(Number(n || 0));
+  }
+  function fmtPct(n, decimals) {
+    return Number(n || 0).toFixed(decimals == null ? 2 : decimals) + '%';
+  }
+  function nowTimeStr() {
+    return new Date().toLocaleTimeString(CONFIG.LOCALE, {
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+  }
+
+  // ============================================================
+  // DATA FETCHING — Meta + Google
+  // ============================================================
+  async function fetchMeta(period) {
+    const dr = getDateRange(period);
+    // 1) Account-level summary
+    const sumUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    sumUrl.searchParams.set('fields', 'spend,impressions,clicks,ctr,cpm,cpc,actions,reach,frequency');
+    sumUrl.searchParams.set('time_range', JSON.stringify(dr));
+    sumUrl.searchParams.set('access_token', '__PROXY__');
+    // 2) Campaign-level breakdown
+    const campUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    campUrl.searchParams.set('fields', 'campaign_name,campaign_id,spend,impressions,clicks,ctr,actions');
+    campUrl.searchParams.set('level', 'campaign');
+    campUrl.searchParams.set('time_range', JSON.stringify(dr));
+    campUrl.searchParams.set('limit', '200');
+    campUrl.searchParams.set('access_token', '__PROXY__');
+    // 3) Placement breakdown
+    const placeUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/insights');
+    placeUrl.searchParams.set('fields', 'spend,impressions,actions');
+    placeUrl.searchParams.set('breakdowns', 'publisher_platform');
+    placeUrl.searchParams.set('time_range', JSON.stringify(dr));
+    placeUrl.searchParams.set('access_token', '__PROXY__');
+
+    const [sumRes, campRes, placeRes] = await Promise.all([
+      fetch(sumUrl).then(r => r.json()).catch(() => null),
+      fetch(campUrl).then(r => r.json()).catch(() => null),
+      fetch(placeUrl).then(r => r.json()).catch(() => null)
+    ]);
+
+    // Helper: sum a specific action type
+    function actSum(actions, type) {
+      if (!Array.isArray(actions)) return 0;
+      const m = actions.find(a => a.action_type === type);
+      return m ? parseFloat(m.value) : 0;
+    }
+    // Try common conversion-like types
+    function resultsFromActions(actions) {
+      if (!Array.isArray(actions)) return 0;
+      const priorities = ['lead', 'complete_registration', 'submit_application_total',
+        'onsite_conversion.lead_grouped', 'offsite_conversion.fb_pixel_lead',
+        'purchase', 'onsite_conversion.purchase'];
+      for (const p of priorities) {
+        const v = actSum(actions, p);
+        if (v > 0) return v;
+      }
+      // Fallback: total of all action types
+      return actions.reduce((s, a) => s + parseFloat(a.value || 0), 0);
+    }
+
+    const summary = sumRes?.data?.[0] || {};
+    const campaigns = (campRes?.data || []).map(c => ({
+      id: c.campaign_id,
+      name: c.campaign_name,
+      spend: parseFloat(c.spend || 0),
+      impressions: parseInt(c.impressions || 0, 10),
+      clicks: parseInt(c.clicks || 0, 10),
+      ctr: parseFloat(c.ctr || 0),
+      results: resultsFromActions(c.actions)
+    })).sort((a, b) => b.spend - a.spend);
+
+    const placements = (placeRes?.data || []).map(p => ({
+      name: p.publisher_platform || 'unknown',
+      spend: parseFloat(p.spend || 0),
+      impressions: parseInt(p.impressions || 0, 10),
+      results: resultsFromActions(p.actions)
+    })).sort((a, b) => b.spend - a.spend);
+
+    const spend = parseFloat(summary.spend || 0);
+    const results = resultsFromActions(summary.actions);
+
+    return {
+      spend,
+      impressions: parseInt(summary.impressions || 0, 10),
+      clicks: parseInt(summary.clicks || 0, 10),
+      ctr: parseFloat(summary.ctr || 0),
+      cpm: parseFloat(summary.cpm || 0),
+      cpc: parseFloat(summary.cpc || 0),
+      reach: parseInt(summary.reach || 0, 10),
+      frequency: parseFloat(summary.frequency || 0),
+      results,
+      cpr: results > 0 ? spend / results : 0,
+      campaigns,
+      placements,
+      error: sumRes?.error?.message || null
+    };
+  }
+
+  async function fetchGoogle(period) {
+    const dr = getDateRange(period);
+    // Single GAQL query — campaign metrics
+    const query =
+      "SELECT campaign.id, campaign.name, " +
+      "metrics.cost_micros, metrics.clicks, metrics.impressions, " +
+      "metrics.conversions, metrics.ctr, metrics.average_cpc, metrics.average_cpm " +
+      "FROM campaign " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+    const url = CONFIG.API_BASE + '/google-ads/customers/' + CONFIG.GOOGLE_ID + '/googleAds:search';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-login-customer-id': CONFIG.GOOGLE_MCC
+      },
+      body: JSON.stringify({ query })
+    }).then(r => r.json()).catch(e => ({ error: { message: e.message }}));
+
+    if (res.error) {
+      return { error: res.error.message || JSON.stringify(res.error), campaigns: [] };
+    }
+
+    // Aggregate
+    const rows = res.results || [];
+    const campMap = {};
+    rows.forEach(r => {
+      const cid = r.campaign?.id;
+      if (!cid) return;
+      if (!campMap[cid]) {
+        campMap[cid] = {
+          id: cid,
+          name: r.campaign.name,
+          spend: 0, clicks: 0, impressions: 0, conversions: 0
+        };
+      }
+      const m = r.metrics || {};
+      campMap[cid].spend       += parseFloat(m.costMicros || 0) / 1e6;
+      campMap[cid].clicks      += parseInt(m.clicks || 0, 10);
+      campMap[cid].impressions += parseInt(m.impressions || 0, 10);
+      campMap[cid].conversions += parseFloat(m.conversions || 0);
+    });
+    const campaigns = Object.values(campMap)
+      .map(c => ({
+        ...c,
+        ctr: c.impressions ? (c.clicks / c.impressions * 100) : 0,
+        cpc: c.clicks ? (c.spend / c.clicks) : 0,
+        cpa: c.conversions ? (c.spend / c.conversions) : 0
+      }))
+      .filter(c => c.spend > 0 || c.clicks > 0)
+      .sort((a, b) => b.spend - a.spend);
+
+    // Totals
+    const tot = campaigns.reduce((acc, c) => {
+      acc.spend       += c.spend;
+      acc.clicks      += c.clicks;
+      acc.impressions += c.impressions;
+      acc.conversions += c.conversions;
+      return acc;
+    }, { spend: 0, clicks: 0, impressions: 0, conversions: 0 });
+
+    return {
+      spend:       tot.spend,
+      clicks:      tot.clicks,
+      impressions: tot.impressions,
+      conversions: tot.conversions,
+      ctr:         tot.impressions ? (tot.clicks / tot.impressions * 100) : 0,
+      cpc:         tot.clicks ? (tot.spend / tot.clicks) : 0,
+      cpm:         tot.impressions ? (tot.spend / tot.impressions * 1000) : 0,
+      cpa:         tot.conversions ? (tot.spend / tot.conversions) : 0,
+      campaigns,
+      error: null
+    };
+  }
+
+  // ============================================================
+  // RENDERING
+  // ============================================================
+  function destroyChart(key) {
+    if (state.charts[key]) {
+      try { state.charts[key].destroy(); } catch(e) {}
+      delete state.charts[key];
+    }
+  }
+  function destroyAllCharts() {
+    Object.keys(state.charts).forEach(destroyChart);
+  }
+
+  function kpiCard(label, value, sub, big) {
+    return `
+      <div class="kpi-card ${big ? 'big' : ''}">
+        <div class="kpi-label">${label}</div>
+        <div class="kpi-value">${value}</div>
+        ${sub ? `<div class="kpi-sub">${sub}</div>` : ''}
+      </div>`;
+  }
+
+  function renderTotal() {
+    const m = state.data.meta || {};
+    const g = state.data.google || {};
+    const errs = [];
+    if (m.error) errs.push('Meta: ' + m.error);
+    if (g.error) errs.push('Google: ' + g.error);
+
+    const totSpend       = (m.spend || 0) + (g.spend || 0);
+    const totImpressions = (m.impressions || 0) + (g.impressions || 0);
+    const totClicks      = (m.clicks || 0) + (g.clicks || 0);
+    const totResults     = (m.results || 0) + (g.conversions || 0);
+    const avgCpr         = totResults > 0 ? totSpend / totResults : 0;
+
+    const dr = getDateRange(state.period);
+    const html = `
+      ${errs.length ? `<div class="error" style="margin-bottom:16px;">⚠ ${errs.join(' · ')}</div>` : ''}
+      <div class="kpi-grid">
+        ${kpiCard('Inversión total', fmtMoney(totSpend), `Meta ${fmtMoney(m.spend || 0)} · Google ${fmtMoney(g.spend || 0)}`, true)}
+        ${kpiCard('Conversiones totales', fmtNum(totResults), `Meta ${fmtNum(m.results || 0)} · Google ${fmtNum(g.conversions || 0)}`, true)}
+        ${kpiCard('Costo / conversión', avgCpr > 0 ? fmtMoney(avgCpr) : '—', 'Promedio combinado', true)}
+      </div>
+      <div class="section-header">DETALLE POR PLATAFORMA</div>
+      <div class="kpi-grid">
+        ${kpiCard('🟦 Meta · Inversión', fmtMoney(m.spend || 0), `${fmtNum(m.impressions || 0)} impresiones`)}
+        ${kpiCard('🟦 Meta · Clicks', fmtNum(m.clicks || 0), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
+        ${kpiCard('🟦 Meta · Conversiones', fmtNum(m.results || 0), m.cpr > 0 ? 'C/Resultado ' + fmtMoney(m.cpr) : '—')}
+        ${kpiCard('🟢 Google · Inversión', fmtMoney(g.spend || 0), `${fmtNum(g.impressions || 0)} impresiones`)}
+        ${kpiCard('🟢 Google · Clicks', fmtNum(g.clicks || 0), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
+        ${kpiCard('🟢 Google · Conversiones', fmtNum(g.conversions || 0), g.cpa > 0 ? 'CPA ' + fmtMoney(g.cpa) : '—')}
+      </div>
+      <div class="section-header">REPARTO DE INVERSIÓN</div>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-title">Inversión por plataforma</div>
+          <div class="chart-canvas"><canvas id="chart-total-spend"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-title">Conversiones por plataforma</div>
+          <div class="chart-canvas"><canvas id="chart-total-conv"></canvas></div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:10.5px;color:var(--gray);margin-top:6px;">
+        Período: ${dr.since} → ${dr.until} · Moneda: ${CONFIG.CURRENCY}
+      </div>
+    `;
+    document.getElementById('total-content').innerHTML = html;
+
+    // Charts
+    destroyChart('total-spend'); destroyChart('total-conv');
+    const ctx1 = document.getElementById('chart-total-spend')?.getContext('2d');
+    if (ctx1 && ((m.spend || 0) + (g.spend || 0) > 0)) {
+      state.charts['total-spend'] = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: ['Meta Ads', 'Google Ads'],
+          datasets: [{
+            data: [m.spend || 0, g.spend || 0],
+            backgroundColor: ['#4267B2', '#34A853'],
+            borderColor: 'transparent', borderWidth: 0
+          }]
+        },
+        options: doughnutOpts()
+      });
+    }
+    const ctx2 = document.getElementById('chart-total-conv')?.getContext('2d');
+    if (ctx2 && ((m.results || 0) + (g.conversions || 0) > 0)) {
+      state.charts['total-conv'] = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['Meta Ads', 'Google Ads'],
+          datasets: [{
+            data: [m.results || 0, g.conversions || 0],
+            backgroundColor: ['#4267B2', '#34A853'],
+            borderColor: 'transparent', borderWidth: 0
+          }]
+        },
+        options: doughnutOpts()
+      });
+    }
+  }
+
+  function renderMeta() {
+    const m = state.data.meta;
+    if (!m) return;
+    if (m.error) {
+      document.getElementById('meta-content').innerHTML = `<div class="error">⚠ Meta API: ${m.error}</div>`;
+      return;
+    }
+    const camps = (m.campaigns || []).slice(0, 10);
+    const places = m.placements || [];
+    const dr = getDateRange(state.period);
+
+    const tableRows = (m.campaigns || []).map(c => `
+      <tr>
+        <td>${escHtml(c.name || '—')}</td>
+        <td class="num">${fmtMoney(c.spend)}</td>
+        <td class="num">${fmtNum(c.impressions)}</td>
+        <td class="num">${fmtNum(c.clicks)}</td>
+        <td class="num">${fmtPct(c.ctr || 0)}</td>
+        <td class="num">${fmtNum(c.results || 0)}</td>
+        <td class="num">${c.results > 0 ? fmtMoney(c.spend / c.results) : '—'}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('meta-content').innerHTML = `
+      <div class="kpi-grid">
+        ${kpiCard('Inversión', fmtMoney(m.spend), `Período ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('Impresiones', fmtNum(m.impressions), `Alcance ${fmtNum(m.reach || 0)}`)}
+        ${kpiCard('Clicks', fmtNum(m.clicks), `CTR ${fmtPct(m.ctr || 0)} · CPC ${fmtMoney(m.cpc || 0)}`)}
+        ${kpiCard('CPM', fmtMoney(m.cpm || 0), `Frecuencia ${(m.frequency || 0).toFixed(2)}x`)}
+        ${kpiCard('Conversiones', fmtNum(m.results || 0), 'Total acciones')}
+        ${kpiCard('Costo / Resultado', m.cpr > 0 ? fmtMoney(m.cpr) : '—', 'CPL/CPA')}
+      </div>
+      <div class="section-header">RESULTADOS POR CAMPAÑA</div>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-title">Inversión por campaña (top 10)</div>
+          <div class="chart-canvas"><canvas id="chart-meta-spend"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-title">Conversiones por campaña (top 10)</div>
+          <div class="chart-canvas"><canvas id="chart-meta-conv"></canvas></div>
+        </div>
+      </div>
+      ${places.length > 0 ? `
+      <div class="section-header">REPARTO POR PLATAFORMA</div>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-title">Inversión por placement</div>
+          <div class="chart-canvas"><canvas id="chart-meta-place"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-title">Conversiones por placement</div>
+          <div class="chart-canvas"><canvas id="chart-meta-placeconv"></canvas></div>
+        </div>
+      </div>` : ''}
+      <div class="section-header">DETALLE DE CAMPAÑAS</div>
+      <div class="table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Campaña</th>
+              <th class="num">Inversión</th>
+              <th class="num">Impresiones</th>
+              <th class="num">Clicks</th>
+              <th class="num">CTR</th>
+              <th class="num">Conv.</th>
+              <th class="num">Costo/Conv.</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td class="num">${fmtMoney(m.spend)}</td>
+              <td class="num">${fmtNum(m.impressions)}</td>
+              <td class="num">${fmtNum(m.clicks)}</td>
+              <td class="num">${fmtPct(m.ctr || 0)}</td>
+              <td class="num">${fmtNum(m.results || 0)}</td>
+              <td class="num">${m.cpr > 0 ? fmtMoney(m.cpr) : '—'}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+
+    // Charts
+    ['meta-spend','meta-conv','meta-place','meta-placeconv'].forEach(destroyChart);
+    if (camps.length > 0) {
+      state.charts['meta-spend'] = new Chart(document.getElementById('chart-meta-spend').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: camps.map(c => truncate(c.name, 18)),
+          datasets: [{
+            label: 'Inversión (USD)',
+            data: camps.map(c => c.spend),
+            backgroundColor: '#4267B2', borderRadius: 4
+          }]
+        },
+        options: barOpts({ currency: true })
+      });
+      state.charts['meta-conv'] = new Chart(document.getElementById('chart-meta-conv').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: camps.map(c => truncate(c.name, 18)),
+          datasets: [{
+            label: 'Conversiones',
+            data: camps.map(c => c.results),
+            backgroundColor: CONFIG.CHART_COLORS.lime, borderRadius: 4
+          }]
+        },
+        options: barOpts({ valueFmt: 'num' })
+      });
+    }
+    if (places.length > 0) {
+      state.charts['meta-place'] = new Chart(document.getElementById('chart-meta-place').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: places.map(p => p.name),
+          datasets: [{
+            data: places.map(p => p.spend),
+            backgroundColor: ['#4267B2', '#E1306C', '#34A853', '#FBBC05', '#888'],
+            borderWidth: 0
+          }]
+        },
+        options: doughnutOpts()
+      });
+      state.charts['meta-placeconv'] = new Chart(document.getElementById('chart-meta-placeconv').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: places.map(p => p.name),
+          datasets: [{
+            data: places.map(p => p.results),
+            backgroundColor: ['#4267B2', '#E1306C', '#34A853', '#FBBC05', '#888'],
+            borderWidth: 0
+          }]
+        },
+        options: doughnutOpts()
+      });
+    }
+  }
+
+  function renderGoogle() {
+    const g = state.data.google;
+    if (!g) return;
+    if (g.error) {
+      document.getElementById('google-content').innerHTML = `<div class="error">⚠ Google Ads API: ${g.error}</div>`;
+      return;
+    }
+    const camps = (g.campaigns || []).slice(0, 10);
+    const dr = getDateRange(state.period);
+
+    const tableRows = (g.campaigns || []).map(c => `
+      <tr>
+        <td>${escHtml(c.name || '—')}</td>
+        <td class="num">${fmtMoney(c.spend)}</td>
+        <td class="num">${fmtNum(c.impressions)}</td>
+        <td class="num">${fmtNum(c.clicks)}</td>
+        <td class="num">${fmtPct(c.ctr || 0)}</td>
+        <td class="num">${fmtNum(c.conversions)}</td>
+        <td class="num">${c.cpa > 0 ? fmtMoney(c.cpa) : '—'}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('google-content').innerHTML = `
+      <div class="kpi-grid">
+        ${kpiCard('Inversión', fmtMoney(g.spend), `Período ${dr.since} → ${dr.until}`, true)}
+        ${kpiCard('Impresiones', fmtNum(g.impressions), `CPM ${fmtMoney(g.cpm || 0)}`)}
+        ${kpiCard('Clicks', fmtNum(g.clicks), `CTR ${fmtPct(g.ctr || 0)} · CPC ${fmtMoney(g.cpc || 0)}`)}
+        ${kpiCard('Conversiones', fmtNum(g.conversions || 0), 'Total tracked')}
+        ${kpiCard('CPA', g.cpa > 0 ? fmtMoney(g.cpa) : '—', 'Costo por conversión')}
+        ${kpiCard('Campañas activas', fmtNum(g.campaigns.length), `Top: ${truncate(g.campaigns[0]?.name || '—', 22)}`)}
+      </div>
+      <div class="section-header">RESULTADOS POR CAMPAÑA</div>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-title">Conversiones por campaña (top 10)</div>
+          <div class="chart-canvas"><canvas id="chart-google-conv"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-title">Inversión por campaña (top 10)</div>
+          <div class="chart-canvas"><canvas id="chart-google-spend"></canvas></div>
+        </div>
+      </div>
+      <div class="section-header">EFICIENCIA · COSTO Y COSTO/CONVERSIÓN</div>
+      <div class="chart-block">
+        <div class="chart-title">Coste vs. Coste por conversión por campaña (top 10)</div>
+        <div class="chart-canvas" style="height:320px;"><canvas id="chart-google-combo"></canvas></div>
+      </div>
+      <div class="section-header">DETALLE DE CAMPAÑAS</div>
+      <div class="table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Campaña</th>
+              <th class="num">Inversión</th>
+              <th class="num">Impresiones</th>
+              <th class="num">Clicks</th>
+              <th class="num">CTR</th>
+              <th class="num">Conv.</th>
+              <th class="num">CPA</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td class="num">${fmtMoney(g.spend)}</td>
+              <td class="num">${fmtNum(g.impressions)}</td>
+              <td class="num">${fmtNum(g.clicks)}</td>
+              <td class="num">${fmtPct(g.ctr || 0)}</td>
+              <td class="num">${fmtNum(g.conversions)}</td>
+              <td class="num">${g.cpa > 0 ? fmtMoney(g.cpa) : '—'}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+
+    // Charts
+    ['google-conv','google-spend','google-combo'].forEach(destroyChart);
+    if (camps.length > 0) {
+      state.charts['google-conv'] = new Chart(document.getElementById('chart-google-conv').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: camps.map(c => truncate(c.name, 18)),
+          datasets: [{
+            label: 'Conversiones',
+            data: camps.map(c => c.conversions),
+            backgroundColor: '#34A853', borderRadius: 4
+          }]
+        },
+        options: barOpts({ valueFmt: 'num' })
+      });
+      state.charts['google-spend'] = new Chart(document.getElementById('chart-google-spend').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: camps.map(c => truncate(c.name, 18)),
+          datasets: [{
+            label: 'Inversión',
+            data: camps.map(c => c.spend),
+            backgroundColor: '#4285F4', borderRadius: 4
+          }]
+        },
+        options: barOpts({ currency: true })
+      });
+      state.charts['google-combo'] = new Chart(document.getElementById('chart-google-combo').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: camps.map(c => truncate(c.name, 18)),
+          datasets: [
+            {
+              label: 'Inversión (USD)',
+              data: camps.map(c => c.spend),
+              backgroundColor: '#4285F4', borderRadius: 4,
+              yAxisID: 'y'
+            },
+            {
+              label: 'CPA (USD)',
+              type: 'line',
+              data: camps.map(c => c.cpa || 0),
+              borderColor: CONFIG.CHART_COLORS.lime,
+              backgroundColor: 'transparent',
+              borderWidth: 3, tension: 0.3, pointRadius: 4,
+              pointBackgroundColor: CONFIG.CHART_COLORS.lime,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: comboOpts()
+      });
+    }
+  }
+
+  // ============================================================
+  // CHART STYLE HELPERS
+  // ============================================================
+  function baseChartOpts() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: '#b0b0b0', font: { family: 'Inter', size: 11 } },
+          position: 'top'
+        },
+        tooltip: {
+          backgroundColor: 'rgba(20,20,20,0.95)',
+          borderColor: 'rgba(204,255,68,0.4)', borderWidth: 1,
+          titleColor: '#F0F0F0', bodyColor: '#F0F0F0',
+          padding: 10, cornerRadius: 6
+        }
+      }
+    };
+  }
+  function barOpts(opts) {
+    opts = opts || {};
+    const base = baseChartOpts();
+    base.plugins.legend.display = false;
+    base.plugins.tooltip.callbacks = {
+      label: ctx => {
+        const v = ctx.parsed.y;
+        return opts.currency ? fmtMoney(v) : fmtNum(v);
+      }
+    };
+    base.scales = {
+      x: {
+        ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 }, maxRotation: 60, minRotation: 30 },
+        grid: { display: false }
+      },
+      y: {
+        ticks: {
+          color: CONFIG.CHART_COLORS.textColor, font: { size: 10 },
+          callback: v => opts.currency ? '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) : fmtNum(v)
+        },
+        grid: { color: CONFIG.CHART_COLORS.gridLine }
+      }
+    };
+    return base;
+  }
+  function doughnutOpts() {
+    const base = baseChartOpts();
+    base.cutout = '60%';
+    base.plugins.legend.position = 'bottom';
+    base.plugins.tooltip.callbacks = {
+      label: ctx => {
+        const v = ctx.parsed;
+        const total = ctx.dataset.data.reduce((s, d) => s + d, 0);
+        const pct = total ? (v/total*100).toFixed(1) : 0;
+        return ctx.label + ': ' + fmtMoney(v) + ' (' + pct + '%)';
+      }
+    };
+    return base;
+  }
+  function comboOpts() {
+    const base = baseChartOpts();
+    base.scales = {
+      x: {
+        ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 }, maxRotation: 60 },
+        grid: { display: false }
+      },
+      y: {
+        position: 'left',
+        ticks: { color: CONFIG.CHART_COLORS.textColor, font: { size: 10 }, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) },
+        grid: { color: CONFIG.CHART_COLORS.gridLine },
+        title: { display: true, text: 'Inversión', color: '#888', font: { size: 10 } }
+      },
+      y1: {
+        position: 'right',
+        ticks: { color: CONFIG.CHART_COLORS.lime, font: { size: 10 }, callback: v => '$' + v.toFixed(0) },
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: 'CPA', color: CONFIG.CHART_COLORS.lime, font: { size: 10 } }
+      }
+    };
+    return base;
+  }
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
+  function escHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function truncate(s, n) {
+    s = String(s || '');
+    return s.length > n ? s.slice(0, n - 1) + '…' : s;
+  }
+
+  // ============================================================
+  // FETCH + RENDER ORCHESTRATION
+  // ============================================================
+  async function loadAll() {
+    if (state.fetching) return;
+    state.fetching = true;
+    try {
+      const [m, g] = await Promise.all([
+        fetchMeta(state.period).catch(e => ({ error: e.message })),
+        fetchGoogle(state.period).catch(e => ({ error: e.message }))
+      ]);
+      state.data.meta = m;
+      state.data.google = g;
+      destroyAllCharts();
+      renderTotal();
+      renderMeta();
+      renderGoogle();
+      const t = nowTimeStr();
+      document.getElementById('lastUpdate').textContent = 'Actualizado ' + t;
+      document.getElementById('footerUpdate').textContent = t;
+    } catch (e) {
+      console.error('loadAll error', e);
+    } finally {
+      state.fetching = false;
+    }
+  }
+
+  // ============================================================
+  // UI WIRING
+  // ============================================================
+  document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.period = btn.dataset.period;
+      loadAll();
+    });
+  });
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+  document.getElementById('liveBtn').addEventListener('click', () => {
+    state.liveOn = !state.liveOn;
+    const btn = document.getElementById('liveBtn');
+    const status = document.getElementById('liveStatus');
+    const statusText = document.getElementById('liveStatusText');
+    if (state.liveOn) {
+      btn.textContent = '⏸ Pausar EN VIVO';
+      btn.classList.add('live-on');
+      status.classList.add('active');
+      statusText.textContent = 'EN VIVO';
+      // Start auto-refresh
+      if (state.autoTimer) clearInterval(state.autoTimer);
+      state.autoTimer = setInterval(loadAll, CONFIG.AUTOREFRESH_MS);
+      // Trigger immediate refresh too
+      loadAll();
+    } else {
+      btn.textContent = '🔴 Activar EN VIVO';
+      btn.classList.remove('live-on');
+      status.classList.remove('active');
+      statusText.textContent = 'Pausado';
+      if (state.autoTimer) clearInterval(state.autoTimer);
+      state.autoTimer = null;
+    }
+  });
+
+  // Initial load
+  loadAll();
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09', 'color:#CCFF44;font-weight:700;');
+  </script>
+</body>
+</html>
