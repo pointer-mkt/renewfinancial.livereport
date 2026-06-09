@@ -309,6 +309,32 @@
 
     /* ── Truncated label cell ──────────────── */
     .lbl-cell { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── Clickable ad preview ──────────────── */
+    .ad-preview-link {
+      text-decoration: none; color: inherit; display: inline-block;
+      transition: filter 0.15s;
+    }
+    .ad-preview-link:hover { filter: brightness(1.15); }
+    .ad-preview-link:hover .ad-thumb { box-shadow: 0 0 0 1px var(--lime); }
+    .ad-thumb { transition: box-shadow 0.15s; }
+    .ad-thumb.fallback { font-size: 14px; }
+
+    /* ── Keyword + Match type ───────────────── */
+    .kw-icon { color: var(--lime); margin-right: 6px; font-size: 11px; }
+    .match-badge {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.4px;
+      margin-left: 6px; vertical-align: middle;
+      background: rgba(204,255,68,0.10); color: var(--lime);
+      border: 1px solid rgba(204,255,68,0.25);
+    }
+    .match-badge.phrase { background: rgba(255,140,66,0.10); color: var(--orange); border-color: rgba(255,140,66,0.25); }
+    .match-badge.broad  { background: rgba(255,255,255,0.05); color: var(--gray); border-color: var(--border); }
+    .theme-icon { color: var(--orange); margin-right: 6px; font-size: 12px; }
+
+    /* ── PMAX asset group ───────────────────── */
+    .pmax-row { background: rgba(255,140,66,0.04) !important; }
   </style>
 </head>
 <body>
@@ -351,6 +377,7 @@
       <button class="tab active" data-tab="total">📊 TOTAL</button>
       <button class="tab" data-tab="meta">🟦 META ADS</button>
       <button class="tab" data-tab="google">🟢 GOOGLE ADS</button>
+      <button class="tab" data-tab="keywords">🔑 DETALLE POR KEYWORDS</button>
     </div>
 
     <!-- TOTAL Tab -->
@@ -374,9 +401,16 @@
       </div>
     </div>
 
+    <!-- KEYWORDS Tab -->
+    <div class="tab-content" id="tab-keywords">
+      <div id="keywords-content">
+        <div class="loading"><span class="spinner"></span>Cargando keywords…</div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
-      Dashboard generado por <span class="accent">POINTER</span> · Datos en tiempo real desde Meta Marketing API + Google Ads API<br/>
+      Dashboard generado por <span class="accent">POINTER</span> · Datos en tiempo real desde Meta Ads y Google Ads<br/>
       Auto-actualización cada 5 min cuando "EN VIVO" está activo · Última actualización: <span id="footerUpdate">—</span>
     </div>
 
@@ -1008,7 +1042,7 @@
         ads.forEach(ad => {
           tbodyRows += `
             <tr class="row-ad collapsed gcamp-${escHtml(cid)} gag-${escHtml(agid)}" data-aid="${escHtml(String(ad.id))}">
-              <td class="lbl-cell">${googleAdPreviewHtml(ad)}</td>
+              <td class="lbl-cell">${googleAdPreviewHtml(ad, cid)}</td>
               <td class="num">${fmtMoney(ad.spend)}</td>
               <td class="num">${fmtNum(ad.impressions)}</td>
               <td class="num">${fmtNum(ad.clicks)}</td>
@@ -1374,13 +1408,22 @@
     if (s === 'REMOVED' || s === 4) return '<span class="status-badge off">REMOVED</span>';
     return '<span class="status-badge review">' + (s || '?') + '</span>';
   }
-  // Render a Meta ad preview: image thumbnail or fallback
+  // Render a Meta ad preview: clickable card → opens Ads Manager
   function metaAdPreviewHtml(ad, hashUrlMap) {
     const url = pickMetaAdImage(ad, hashUrlMap);
-    if (url) {
-      return '<div class="ad-preview"><img class="ad-thumb" src="' + escHtml(url) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /><span class="ad-name">' + escHtml(truncate(ad.name || '—', 38)) + '</span>' + metaStatusBadge(ad.effective_status) + '</div>';
+    const adId = String(ad.id || '');
+    const acctNum = CONFIG.META_ACC.replace(/^act_/, '');
+    const adsMgrUrl = 'https://business.facebook.com/adsmanager/manage/ads?act=' + acctNum + '&selected_ad_ids=' + adId;
+    // Debug log once per ad
+    if (typeof window.__metaAdLogged !== 'object') window.__metaAdLogged = {};
+    if (!window.__metaAdLogged[adId]) {
+      console.log('[Ad Preview]', adId, ad.name, { hasUrl: !!url, creative: ad.creative });
+      window.__metaAdLogged[adId] = true;
     }
-    return '<div class="ad-preview"><div class="ad-thumb fallback">🖼</div><span class="ad-name">' + escHtml(truncate(ad.name || '—', 38)) + '</span>' + metaStatusBadge(ad.effective_status) + '</div>';
+    const thumbHtml = url
+      ? `<img class="ad-thumb" src="${escHtml(url)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'ad-thumb fallback\\'>🎬</div>'" />`
+      : `<div class="ad-thumb fallback">🎬</div>`;
+    return `<a href="${adsMgrUrl}" target="_blank" rel="noopener" class="ad-preview-link" title="Abrir en Meta Ads Manager"><div class="ad-preview">${thumbHtml}<span class="ad-name">${escHtml(truncate(ad.name || '—', 50))}</span>${metaStatusBadge(ad.effective_status)}</div></a>`;
   }
   // Picks best image URL per CLAUDE.md priority chain
   function pickMetaAdImage(ad, hashUrlMap) {
@@ -1423,10 +1466,12 @@
     });
     return [...hashes];
   }
-  // Render a Google ad preview based on ad.type
-  function googleAdPreviewHtml(ad) {
+  // Render a Google ad preview based on ad.type — clickable → Google Ads UI
+  function googleAdPreviewHtml(ad, campaignId) {
     const t = ad.type || ad.adType || '';
     const status = googleStatusBadge(ad.status);
+    const adUrl = 'https://ads.google.com/aw/ads?campaignId=' + (campaignId || '');
+    let inner = '';
     if (t === 'RESPONSIVE_SEARCH_AD' || t === 'TEXT_AD' || t === 'EXPANDED_TEXT_AD' || t === 'SEARCH_AD') {
       const rsa = ad.responsive_search_ad || ad.responsiveSearchAd || {};
       const headlines = (rsa.headlines || []).slice(0, 3).map(h => escHtml(h.text || '')).filter(Boolean).join(' · ') || '—';
@@ -1435,18 +1480,20 @@
       let dom = '';
       try { dom = new URL(host.startsWith('http') ? host : 'https://' + host).hostname; }
       catch(e) { dom = host; }
-      return '<div class="ad-preview"><div class="ad-rsa"><div class="rsa-host">Anuncio · ' + escHtml(dom) + '</div><div class="rsa-headline">' + headlines + '</div><div class="rsa-desc">' + escHtml(truncate(desc, 90)) + '</div></div>' + status + '</div>';
-    }
-    if (t === 'IMAGE_AD' || t === 'RESPONSIVE_DISPLAY_AD' || t === 'DISPLAY_UPLOAD_AD') {
+      inner = '<div class="ad-rsa"><div class="rsa-host">Anuncio · ' + escHtml(dom) + '</div><div class="rsa-headline">' + headlines + '</div><div class="rsa-desc">' + escHtml(truncate(desc, 90)) + '</div></div>' + status;
+    } else if (t === 'IMAGE_AD' || t === 'RESPONSIVE_DISPLAY_AD' || t === 'DISPLAY_UPLOAD_AD') {
       const img = (ad.image_ad && ad.image_ad.image_url) || (ad.imageAd && ad.imageAd.imageUrl);
-      if (img) return '<div class="ad-preview"><img class="ad-thumb" src="' + escHtml(img) + '" alt="" loading="lazy" /><span class="ad-name">' + escHtml(truncate(ad.name || 'Display ad', 38)) + '</span>' + status + '</div>';
-    }
-    if (t === 'VIDEO_AD' || t === 'VIDEO_RESPONSIVE_AD') {
+      inner = (img ? '<img class="ad-thumb" src="' + escHtml(img) + '" alt="" loading="lazy" />' : '<div class="ad-thumb fallback">🖼</div>') +
+              '<span class="ad-name">' + escHtml(truncate(ad.name || 'Display ad', 38)) + '</span>' + status;
+    } else if (t === 'VIDEO_AD' || t === 'VIDEO_RESPONSIVE_AD') {
       const v = ad.video_ad || ad.videoAd || {};
       const tn = v.youtube_video_id ? 'https://i.ytimg.com/vi/' + v.youtube_video_id + '/hqdefault.jpg' : '';
-      if (tn) return '<div class="ad-preview"><img class="ad-thumb" src="' + tn + '" alt="" loading="lazy" /><span class="ad-name">' + escHtml(truncate(ad.name || 'Video ad', 38)) + '</span>' + status + '</div>';
+      inner = (tn ? '<img class="ad-thumb" src="' + tn + '" alt="" loading="lazy" />' : '<div class="ad-thumb fallback">🎬</div>') +
+              '<span class="ad-name">' + escHtml(truncate(ad.name || 'Video ad', 38)) + '</span>' + status;
+    } else {
+      inner = '<div class="ad-thumb fallback">📄</div><span class="ad-name">' + escHtml(truncate(ad.name || t || 'Ad', 38)) + '</span>' + status;
     }
-    return '<div class="ad-preview"><div class="ad-thumb fallback">📄</div><span class="ad-name">' + escHtml(truncate(ad.name || t || 'Ad', 38)) + '</span>' + status + '</div>';
+    return '<a href="' + adUrl + '" target="_blank" rel="noopener" class="ad-preview-link" title="Abrir en Google Ads"><div class="ad-preview">' + inner + '</div></a>';
   }
 
   // ============================================================
@@ -1540,9 +1587,11 @@
     adUrl.searchParams.set('time_range', JSON.stringify(dr));
     adUrl.searchParams.set('limit', '500');
     adUrl.searchParams.set('access_token', '__PROXY__');
-    // Ad metadata (status + creative)
+    // Ad metadata (status + creative). KEEP this expansion narrow — deep nested
+    // expansions sporadically 500 on Graph API. thumbnail_url is the most reliable
+    // public-facing image (no token required, hosted on Meta CDN).
     const adsMetaUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/ads');
-    adsMetaUrl.searchParams.set('fields', 'id,name,status,effective_status,adset_id,campaign_id,creative{id,thumbnail_url,image_url,image_hash,object_story_spec{link_data{image_hash,picture},video_data{image_url,image_hash}},asset_feed_spec{images{hash}}}');
+    adsMetaUrl.searchParams.set('fields', 'id,name,effective_status,adset_id,creative{thumbnail_url,image_url,image_hash}');
     adsMetaUrl.searchParams.set('limit', '500');
     adsMetaUrl.searchParams.set('access_token', '__PROXY__');
     // Adset status
@@ -1650,35 +1699,56 @@
       "metrics.average_cpm, metrics.conversions " +
       "FROM ad_group " +
       "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
-    // Ad-level metrics with full creative info
+    // Ad-level metrics with creative info — NO video_ad.video (causes 400)
     const adQuery =
       "SELECT campaign.id, ad_group.id, ad_group_ad.ad.id, ad_group_ad.ad.name, " +
       "ad_group_ad.ad.type, ad_group_ad.status, ad_group_ad.ad.final_urls, " +
       "ad_group_ad.ad.responsive_search_ad.headlines, " +
       "ad_group_ad.ad.responsive_search_ad.descriptions, " +
       "ad_group_ad.ad.image_ad.image_url, " +
-      "ad_group_ad.ad.video_ad.video, " +
       "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
       "metrics.average_cpm, metrics.conversions " +
       "FROM ad_group_ad " +
       "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
-    // Campaign status (separate query, just for status)
+    // Campaign status + channel type (so we can route PMAX separately)
     const campStatusQuery =
-      "SELECT campaign.id, campaign.status FROM campaign " +
+      "SELECT campaign.id, campaign.status, campaign.advertising_channel_type FROM campaign " +
       "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+    // PMAX: asset groups with metrics
+    const assetGroupQuery =
+      "SELECT campaign.id, campaign.name, asset_group.id, asset_group.name, asset_group.status, " +
+      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
+      "metrics.average_cpm, metrics.conversions " +
+      "FROM asset_group " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "' " +
+      "AND campaign.advertising_channel_type = 'PERFORMANCE_MAX'";
+    // PMAX: assets attached to each asset group (images + headlines)
+    const assetGroupAssetsQuery =
+      "SELECT asset_group.id, asset_group_asset.field_type, " +
+      "asset.id, asset.type, asset.text_asset.text, asset.image_asset.full_size.url " +
+      "FROM asset_group_asset " +
+      "WHERE campaign.advertising_channel_type = 'PERFORMANCE_MAX' " +
+      "AND asset_group_asset.field_type IN ('HEADLINE','MARKETING_IMAGE','SQUARE_MARKETING_IMAGE','LANDSCAPE_LOGO','LOGO')";
 
     const baseUrl = CONFIG.API_BASE + '/google-ads/customers/' + CONFIG.GOOGLE_ID + '/googleAds:search';
     const hdrs = { 'Content-Type': 'application/json', 'x-login-customer-id': CONFIG.GOOGLE_MCC };
-    const [agRes, adsRes, campRes] = await Promise.all([
+    const [agRes, adsRes, campRes, pmaxAGRes, pmaxAssetRes] = await Promise.all([
       fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: adGroupQuery })}).then(r => r.json()).catch(() => null),
       fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: adQuery })}).then(r => r.json()).catch(() => null),
-      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: campStatusQuery })}).then(r => r.json()).catch(() => null)
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: campStatusQuery })}).then(r => r.json()).catch(() => null),
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: assetGroupQuery })}).then(r => r.json()).catch(() => null),
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: assetGroupAssetsQuery })}).then(r => r.json()).catch(() => null)
     ]);
 
     const campStatus = {};
+    const pmaxCampaignIds = new Set();
     (campRes?.results || []).forEach(r => {
       const cid = r.campaign?.id;
-      if (cid) campStatus[String(cid)] = r.campaign.status;
+      if (!cid) return;
+      campStatus[String(cid)] = r.campaign.status;
+      if ((r.campaign.advertisingChannelType || r.campaign.advertising_channel_type) === 'PERFORMANCE_MAX') {
+        pmaxCampaignIds.add(String(cid));
+      }
     });
 
     // NOTE: Google Ads API responses are camelCase (adGroup, adGroupAd, responsiveSearchAd)
@@ -1757,7 +1827,290 @@
       })).sort((a, b) => b.spend - a.spend);
     });
 
-    return { adGroupsByCamp: adGroupsByCampArr, adsByGroup: adsByGroupArr, campStatus };
+    // PMAX: process asset groups + assets, merge into the same maps so drill-down works uniformly
+    (pmaxAGRes?.results || []).forEach(r => {
+      const cid = r.campaign?.id ? String(r.campaign.id) : null;
+      const ag = r.assetGroup || r.asset_group;
+      const agid = ag?.id ? String(ag.id) : null;
+      if (!cid || !agid) return;
+      const m = r.metrics || {};
+      const spend = parseFloat(m.costMicros || 0) / 1e6;
+      const impressions = parseInt(m.impressions || 0, 10);
+      const clicks = parseInt(m.clicks || 0, 10);
+      const conversions = parseFloat(m.conversions || 0);
+      const item = {
+        id: agid,
+        name: ag.name,
+        status: ag.status,
+        spend, impressions, clicks, conversions,
+        ctr: impressions ? clicks / impressions * 100 : 0,
+        cpm: impressions ? spend / impressions * 1000 : 0,
+        cpa: conversions ? spend / conversions : 0,
+        isPmax: true
+      };
+      if (!adGroupsByCampArr[cid]) adGroupsByCampArr[cid] = [];
+      adGroupsByCampArr[cid].push(item);
+    });
+    // PMAX assets: group by asset_group_id → render as "pseudo-ads" (image + headlines)
+    const pmaxAssetsByGroup = {};
+    (pmaxAssetRes?.results || []).forEach(r => {
+      const ag = r.assetGroup || r.asset_group;
+      const agid = ag?.id ? String(ag.id) : null;
+      if (!agid) return;
+      const asset = r.asset || {};
+      const aga = r.assetGroupAsset || r.asset_group_asset || {};
+      const ft = aga.fieldType || aga.field_type;
+      if (!pmaxAssetsByGroup[agid]) pmaxAssetsByGroup[agid] = { images: [], headlines: [], logos: [] };
+      if (ft === 'MARKETING_IMAGE' || ft === 'SQUARE_MARKETING_IMAGE') {
+        const url = asset.imageAsset?.fullSize?.url || asset.image_asset?.full_size?.url;
+        if (url) pmaxAssetsByGroup[agid].images.push({ url, id: asset.id });
+      } else if (ft === 'HEADLINE') {
+        const text = asset.textAsset?.text || asset.text_asset?.text;
+        if (text) pmaxAssetsByGroup[agid].headlines.push(text);
+      } else if (ft === 'LOGO' || ft === 'LANDSCAPE_LOGO') {
+        const url = asset.imageAsset?.fullSize?.url || asset.image_asset?.full_size?.url;
+        if (url) pmaxAssetsByGroup[agid].logos.push({ url, id: asset.id });
+      }
+    });
+    // For each PMAX asset group, create a single "ad" entry with image + headlines
+    Object.keys(pmaxAssetsByGroup).forEach(agid => {
+      const a = pmaxAssetsByGroup[agid];
+      const previewImg = (a.images[0] && a.images[0].url) || (a.logos[0] && a.logos[0].url) || null;
+      adsByGroupArr[agid] = [{
+        id: agid + '-preview',
+        name: a.headlines.slice(0, 3).join(' · ') || 'PMAX Asset Group',
+        type: previewImg ? 'IMAGE_AD' : 'PMAX_TEXT',
+        status: 'ENABLED',
+        image_ad: previewImg ? { image_url: previewImg } : null,
+        responsive_search_ad: { headlines: a.headlines.map(t => ({text: t})) },
+        spend: 0, impressions: 0, clicks: 0, conversions: 0,
+        ctr: 0, cpm: 0, cpa: 0,
+        isPmaxPreview: true
+      }];
+    });
+    Object.keys(adGroupsByCampArr).forEach(cid => {
+      adGroupsByCampArr[cid].sort((a, b) => b.spend - a.spend);
+    });
+
+    return { adGroupsByCamp: adGroupsByCampArr, adsByGroup: adsByGroupArr, campStatus, pmaxCampaignIds: [...pmaxCampaignIds] };
+  }
+
+  // ============================================================
+  // KEYWORDS FETCHER + RENDER (tab Detalle por Keywords)
+  // ============================================================
+  async function fetchKeywords(period) {
+    const dr = getDateRange(period);
+    // Search keywords (excludes PMAX)
+    const kwQuery =
+      "SELECT campaign.id, campaign.name, ad_group.id, ad_group.name, " +
+      "ad_group_criterion.criterion_id, ad_group_criterion.keyword.text, " +
+      "ad_group_criterion.keyword.match_type, ad_group_criterion.status, " +
+      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
+      "metrics.conversions " +
+      "FROM keyword_view " +
+      "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
+    // PMAX search themes (asset_group_signal with type=SEARCH_THEME)
+    const stQuery =
+      "SELECT campaign.id, campaign.name, asset_group.id, asset_group.name, " +
+      "asset_group_signal.search_theme.text " +
+      "FROM asset_group_signal " +
+      "WHERE asset_group_signal.type = 'SEARCH_THEME'";
+    const baseUrl = CONFIG.API_BASE + '/google-ads/customers/' + CONFIG.GOOGLE_ID + '/googleAds:search';
+    const hdrs = { 'Content-Type': 'application/json', 'x-login-customer-id': CONFIG.GOOGLE_MCC };
+    const [kwRes, stRes] = await Promise.all([
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: kwQuery })}).then(r => r.json()).catch(() => null),
+      fetch(baseUrl, { method:'POST', headers: hdrs, body: JSON.stringify({ query: stQuery })}).then(r => r.json()).catch(() => null)
+    ]);
+    // Group: campaign → ad_group → keywords[]
+    const byCampGroup = {};
+    (kwRes?.results || []).forEach(r => {
+      const cid = r.campaign?.id ? String(r.campaign.id) : null;
+      const cname = r.campaign?.name || '—';
+      const ag = r.adGroup || r.ad_group;
+      const agid = ag?.id ? String(ag.id) : null;
+      const agname = ag?.name || '—';
+      if (!cid || !agid) return;
+      const kc = r.adGroupCriterion || r.ad_group_criterion || {};
+      const kw = kc.keyword || {};
+      const m = r.metrics || {};
+      const spend = parseFloat(m.costMicros || 0) / 1e6;
+      const impressions = parseInt(m.impressions || 0, 10);
+      const clicks = parseInt(m.clicks || 0, 10);
+      const conv = parseFloat(m.conversions || 0);
+      if (!byCampGroup[cid]) byCampGroup[cid] = { id: cid, name: cname, spend: 0, impressions: 0, clicks: 0, conversions: 0, adGroups: {}, isPmax: false };
+      const camp = byCampGroup[cid];
+      if (!camp.adGroups[agid]) camp.adGroups[agid] = { id: agid, name: agname, status: kc.status, spend: 0, impressions: 0, clicks: 0, conversions: 0, items: [] };
+      const grp = camp.adGroups[agid];
+      camp.spend += spend; camp.impressions += impressions; camp.clicks += clicks; camp.conversions += conv;
+      grp.spend += spend; grp.impressions += impressions; grp.clicks += clicks; grp.conversions += conv;
+      grp.items.push({
+        id: String(kc.criterionId || kc.criterion_id || ''),
+        text: kw.text || '—',
+        matchType: kw.matchType || kw.match_type || 'BROAD',
+        status: kc.status,
+        spend, impressions, clicks, conversions: conv,
+        ctr: impressions ? clicks / impressions * 100 : 0,
+        convRate: clicks ? conv / clicks * 100 : 0,
+        cpa: conv ? spend / conv : 0,
+        kind: 'keyword'
+      });
+    });
+    // PMAX search themes
+    (stRes?.results || []).forEach(r => {
+      const cid = r.campaign?.id ? String(r.campaign.id) : null;
+      const cname = r.campaign?.name || '—';
+      const ag = r.assetGroup || r.asset_group;
+      const agid = ag?.id ? String(ag.id) : null;
+      const agname = ag?.name || '—';
+      if (!cid || !agid) return;
+      const signal = r.assetGroupSignal || r.asset_group_signal || {};
+      const theme = (signal.searchTheme || signal.search_theme || {}).text;
+      if (!byCampGroup[cid]) byCampGroup[cid] = { id: cid, name: cname, spend: 0, impressions: 0, clicks: 0, conversions: 0, adGroups: {}, isPmax: true };
+      byCampGroup[cid].isPmax = true;
+      const camp = byCampGroup[cid];
+      if (!camp.adGroups[agid]) camp.adGroups[agid] = { id: agid, name: agname, status: ag.status, spend: 0, impressions: 0, clicks: 0, conversions: 0, items: [] };
+      const grp = camp.adGroups[agid];
+      grp.items.push({
+        id: theme || '—',
+        text: theme || '—',
+        matchType: 'SEARCH_THEME',
+        status: 'ENABLED',
+        spend: 0, impressions: 0, clicks: 0, conversions: 0,
+        ctr: 0, convRate: 0, cpa: 0,
+        kind: 'theme'
+      });
+    });
+    const campsArr = Object.values(byCampGroup).map(c => ({
+      ...c,
+      adGroupsArr: Object.values(c.adGroups).map(g => ({
+        ...g,
+        ctr: g.impressions ? g.clicks / g.impressions * 100 : 0,
+        convRate: g.clicks ? g.conversions / g.clicks * 100 : 0,
+        cpa: g.conversions ? g.spend / g.conversions : 0,
+        items: g.items.sort((a, b) => b.spend - a.spend)
+      })).sort((a, b) => b.spend - a.spend),
+      ctr: c.impressions ? c.clicks / c.impressions * 100 : 0,
+      convRate: c.clicks ? c.conversions / c.clicks * 100 : 0,
+      cpa: c.conversions ? c.spend / c.conversions : 0
+    })).sort((a, b) => b.spend - a.spend);
+    console.log('[Keywords] camps:', campsArr.length, 'total items:', campsArr.reduce((s, c) => s + c.adGroupsArr.reduce((ss, g) => ss + g.items.length, 0), 0));
+    return campsArr;
+  }
+  function matchBadge(mt) {
+    const cls = mt === 'EXACT' ? 'exact' : mt === 'PHRASE' ? 'phrase' : mt === 'SEARCH_THEME' ? 'phrase' : 'broad';
+    const label = mt === 'SEARCH_THEME' ? 'SEARCH THEME' : (mt || 'BROAD');
+    return '<span class="match-badge ' + cls + '">' + escHtml(label) + '</span>';
+  }
+  function renderKeywords() {
+    const data = state.data.keywords || [];
+    let tbodyRows = '';
+    let totSpend = 0, totImpr = 0, totClicks = 0, totConv = 0;
+    data.forEach(c => {
+      const cid = String(c.id);
+      tbodyRows += `
+        <tr class="row-campaign ${c.isPmax ? 'pmax-row' : ''}" data-cid="${escHtml(cid)}">
+          <td class="lbl-cell">
+            ${c.adGroupsArr.length ? `<span class="expand-btn" data-target="kw-camp-${escHtml(cid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+            <strong>${escHtml(c.name || '—')}</strong>${c.isPmax ? ' <span class="match-badge phrase">PMAX</span>' : ''}
+          </td>
+          <td class="num">${fmtMoney(c.spend)}</td>
+          <td class="num">${fmtNum(c.impressions)}</td>
+          <td class="num">${fmtNum(c.clicks)}</td>
+          <td class="num">${fmtPct(c.ctr || 0)}</td>
+          <td class="num">${fmtPct(c.convRate || 0)}</td>
+          <td class="num">${fmtNum(c.conversions)}</td>
+          <td class="num">${c.cpa > 0 ? fmtMoney(c.cpa) : '—'}</td>
+        </tr>`;
+      totSpend += c.spend; totImpr += c.impressions; totClicks += c.clicks; totConv += c.conversions;
+      c.adGroupsArr.forEach(ag => {
+        const agid = String(ag.id);
+        tbodyRows += `
+          <tr class="row-adset collapsed kw-camp-${escHtml(cid)}" data-agid="${escHtml(agid)}">
+            <td class="lbl-cell">
+              ${ag.items.length ? `<span class="expand-btn" data-target="kw-ag-${escHtml(agid)}">▶</span>` : '<span style="display:inline-block;width:24px;"></span>'}
+              ${escHtml(ag.name || '—')} ${googleStatusBadge(ag.status)}
+            </td>
+            <td class="num">${fmtMoney(ag.spend)}</td>
+            <td class="num">${fmtNum(ag.impressions)}</td>
+            <td class="num">${fmtNum(ag.clicks)}</td>
+            <td class="num">${fmtPct(ag.ctr || 0)}</td>
+            <td class="num">${fmtPct(ag.convRate || 0)}</td>
+            <td class="num">${fmtNum(ag.conversions)}</td>
+            <td class="num">${ag.cpa > 0 ? fmtMoney(ag.cpa) : '—'}</td>
+          </tr>`;
+        ag.items.forEach(it => {
+          const icon = it.kind === 'theme' ? '<span class="theme-icon">💡</span>' : '<span class="kw-icon">🔑</span>';
+          tbodyRows += `
+            <tr class="row-ad collapsed kw-camp-${escHtml(cid)} kw-ag-${escHtml(agid)}">
+              <td class="lbl-cell">${icon}${escHtml(truncate(it.text, 60))}${matchBadge(it.matchType)}</td>
+              <td class="num">${fmtMoney(it.spend)}</td>
+              <td class="num">${fmtNum(it.impressions)}</td>
+              <td class="num">${fmtNum(it.clicks)}</td>
+              <td class="num">${fmtPct(it.ctr || 0)}</td>
+              <td class="num">${fmtPct(it.convRate || 0)}</td>
+              <td class="num">${fmtNum(it.conversions)}</td>
+              <td class="num">${it.cpa > 0 ? fmtMoney(it.cpa) : '—'}</td>
+            </tr>`;
+        });
+      });
+    });
+    const totCtr = totImpr ? totClicks / totImpr * 100 : 0;
+    const totConvRate = totClicks ? totConv / totClicks * 100 : 0;
+    const totCpa = totConv ? totSpend / totConv : 0;
+    document.getElementById('keywords-content').innerHTML = `
+      <div class="section-header">DETALLE · CAMPAÑA ▸ AD GROUP ▸ KEYWORD / SEARCH THEME</div>
+      <div class="table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Campaña / Ad Group / Keyword</th>
+              <th class="num">Inversión</th>
+              <th class="num">Impresiones</th>
+              <th class="num">Clicks</th>
+              <th class="num">CTR</th>
+              <th class="num">% Conv.</th>
+              <th class="num">Conv.</th>
+              <th class="num">CPA</th>
+            </tr>
+          </thead>
+          <tbody>${tbodyRows || '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray);">Sin datos en el período</td></tr>'}</tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td class="num">${fmtMoney(totSpend)}</td>
+              <td class="num">${fmtNum(totImpr)}</td>
+              <td class="num">${fmtNum(totClicks)}</td>
+              <td class="num">${fmtPct(totCtr)}</td>
+              <td class="num">${fmtPct(totConvRate)}</td>
+              <td class="num">${fmtNum(totConv)}</td>
+              <td class="num">${totCpa > 0 ? fmtMoney(totCpa) : '—'}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    `;
+    // Wire collapsible rows (same pattern as Google tab)
+    document.querySelectorAll('#keywords-content .expand-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        const wasExpanded = btn.classList.contains('expanded');
+        btn.classList.toggle('expanded');
+        if (target.indexOf('kw-camp-') === 0) {
+          document.querySelectorAll('#keywords-content tr.row-adset.' + target).forEach(r => {
+            if (wasExpanded) {
+              r.classList.add('collapsed');
+              const subBtn = r.querySelector('.expand-btn');
+              if (subBtn) subBtn.classList.remove('expanded');
+              document.querySelectorAll('#keywords-content tr.row-ad.' + target).forEach(a => a.classList.add('collapsed'));
+            } else {
+              r.classList.remove('collapsed');
+            }
+          });
+        } else if (target.indexOf('kw-ag-') === 0) {
+          document.querySelectorAll('#keywords-content tr.row-ad.' + target).forEach(r => r.classList.toggle('collapsed', wasExpanded));
+        }
+      });
+    });
   }
 
   // ============================================================
@@ -1767,14 +2120,15 @@
     if (state.fetching) return;
     state.fetching = true;
     try {
-      // Parallel: account-level + monthly evolution + drill-down hierarchy
-      const [m, g, mMonthly, gMonthly, mHier, gHier] = await Promise.all([
+      // Parallel: account-level + monthly evolution + drill-down hierarchy + keywords
+      const [m, g, mMonthly, gMonthly, mHier, gHier, kw] = await Promise.all([
         fetchMeta(state.period).catch(e => ({ error: e.message })),
         fetchGoogle(state.period).catch(e => ({ error: e.message })),
         fetchMetaMonthly().catch(() => []),
         fetchGoogleMonthly().catch(() => []),
         fetchMetaHierarchy(state.period).catch(() => ({ adsetsMetricsByCamp:{}, adsMetricsByAdset:{}, hashUrlMap:{} })),
-        fetchGoogleHierarchy(state.period).catch(() => ({ adGroupsByCamp:{}, adsByGroup:{}, campStatus:{} }))
+        fetchGoogleHierarchy(state.period).catch(() => ({ adGroupsByCamp:{}, adsByGroup:{}, campStatus:{}, pmaxCampaignIds:[] })),
+        fetchKeywords(state.period).catch(() => [])
       ]);
       state.data.meta         = m;
       state.data.google       = g;
@@ -1782,10 +2136,12 @@
       state.data.googleMonthly = gMonthly;
       state.data.metaHier     = mHier;
       state.data.googleHier   = gHier;
+      state.data.keywords     = kw;
       destroyAllCharts();
       renderTotal();
       renderMeta();
       renderGoogle();
+      renderKeywords();
       const t = nowTimeStr();
       document.getElementById('lastUpdate').textContent = 'Actualizado ' + t;
       document.getElementById('footerUpdate').textContent = t;
@@ -1846,7 +2202,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v6 (scope-fix + meta-labels)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v7 (previews-clickable + pmax + keywords-tab + footer)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
