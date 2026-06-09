@@ -377,7 +377,6 @@
       <button class="tab active" data-tab="total">📊 TOTAL</button>
       <button class="tab" data-tab="meta">🟦 META ADS</button>
       <button class="tab" data-tab="google">🟢 GOOGLE ADS</button>
-      <button class="tab" data-tab="keywords">🔑 DETALLE POR KEYWORDS</button>
     </div>
 
     <!-- TOTAL Tab -->
@@ -398,13 +397,6 @@
     <div class="tab-content" id="tab-google">
       <div id="google-content">
         <div class="loading"><span class="spinner"></span>Cargando Google Ads…</div>
-      </div>
-    </div>
-
-    <!-- KEYWORDS Tab -->
-    <div class="tab-content" id="tab-keywords">
-      <div id="keywords-content">
-        <div class="loading"><span class="spinner"></span>Cargando keywords…</div>
       </div>
     </div>
 
@@ -1591,7 +1583,7 @@
     // expansions sporadically 500 on Graph API. thumbnail_url is the most reliable
     // public-facing image (no token required, hosted on Meta CDN).
     const adsMetaUrl = new URL(CONFIG.API_BASE + '/meta/' + CONFIG.META_ACC + '/ads');
-    adsMetaUrl.searchParams.set('fields', 'id,name,effective_status,adset_id,creative{thumbnail_url,image_url,image_hash}');
+    adsMetaUrl.searchParams.set('fields', 'id,name,status,effective_status,adset_id,creative{thumbnail_url,image_url,image_hash}');
     adsMetaUrl.searchParams.set('limit', '500');
     adsMetaUrl.searchParams.set('access_token', '__PROXY__');
     // Adset status
@@ -1628,18 +1620,20 @@
       });
     }
 
+    // Use `status` (the literal on/off switch in Ads Manager), NOT `effective_status`
+    // which reflects aggregate delivery state ("CAMPAIGN_PAUSED" cuando el padre está pausado).
     const campStatus = {};
-    (campsMeta?.data || []).forEach(c => { campStatus[c.id] = c.effective_status; });
+    (campsMeta?.data || []).forEach(c => { campStatus[c.id] = c.status; });
     const adsetStatus = {};
     const adsetName = {};
-    (adsetsMeta?.data || []).forEach(a => { adsetStatus[a.id] = a.effective_status; adsetName[a.id] = a.name; });
+    (adsetsMeta?.data || []).forEach(a => { adsetStatus[a.id] = a.status; adsetName[a.id] = a.name; });
 
     const ads = adsRaw.map(a => ({
       id: a.id,
       name: a.name,
       adset_id: a.adset_id,
       campaign_id: a.campaign_id,
-      effective_status: a.effective_status,
+      effective_status: a.status,    // pass literal status; metaStatusBadge maps it
       creative: a.creative || {}
     }));
 
@@ -1714,11 +1708,11 @@
     const campStatusQuery =
       "SELECT campaign.id, campaign.status, campaign.advertising_channel_type FROM campaign " +
       "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "'";
-    // PMAX: asset groups with metrics
+    // PMAX: asset groups with metrics. NOTE: asset_group resource does NOT support
+    // metrics.ctr or metrics.average_cpm — query 400s if included. Derive client-side.
     const assetGroupQuery =
       "SELECT campaign.id, campaign.name, asset_group.id, asset_group.name, asset_group.status, " +
-      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.ctr, " +
-      "metrics.average_cpm, metrics.conversions " +
+      "metrics.cost_micros, metrics.impressions, metrics.clicks, metrics.conversions " +
       "FROM asset_group " +
       "WHERE segments.date BETWEEN '" + dr.since + "' AND '" + dr.until + "' " +
       "AND campaign.advertising_channel_type = 'PERFORMANCE_MAX'";
@@ -2057,9 +2051,9 @@
     const totCtr = totImpr ? totClicks / totImpr * 100 : 0;
     const totConvRate = totClicks ? totConv / totClicks * 100 : 0;
     const totCpa = totConv ? totSpend / totConv : 0;
-    document.getElementById('keywords-content').innerHTML = `
-      <div class="section-header">DETALLE · CAMPAÑA ▸ AD GROUP ▸ KEYWORD / SEARCH THEME</div>
-      <div class="table-wrap">
+    const keywordsHtml = `
+      <div class="section-header" id="keywords-section">DETALLE POR KEYWORDS · CAMPAÑA ▸ AD GROUP ▸ KEYWORD / SEARCH THEME</div>
+      <div class="table-wrap" id="keywords-table-wrap">
         <table class="report-table">
           <thead>
             <tr>
@@ -2089,25 +2083,35 @@
         </table>
       </div>
     `;
-    // Wire collapsible rows (same pattern as Google tab)
-    document.querySelectorAll('#keywords-content .expand-btn').forEach(btn => {
+    // Inject at the end of Google Ads tab content (NOT its own tab)
+    const googleEl = document.getElementById('google-content');
+    if (!googleEl) return;
+    // Remove old keyword section if it exists (re-render)
+    const oldSection = document.getElementById('keywords-section');
+    const oldTable = document.getElementById('keywords-table-wrap');
+    if (oldSection) oldSection.remove();
+    if (oldTable) oldTable.remove();
+    googleEl.insertAdjacentHTML('beforeend', keywordsHtml);
+
+    // Wire collapsible rows inside Google tab
+    googleEl.querySelectorAll('#keywords-table-wrap .expand-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.target;
         const wasExpanded = btn.classList.contains('expanded');
         btn.classList.toggle('expanded');
         if (target.indexOf('kw-camp-') === 0) {
-          document.querySelectorAll('#keywords-content tr.row-adset.' + target).forEach(r => {
+          googleEl.querySelectorAll('#keywords-table-wrap tr.row-adset.' + target).forEach(r => {
             if (wasExpanded) {
               r.classList.add('collapsed');
               const subBtn = r.querySelector('.expand-btn');
               if (subBtn) subBtn.classList.remove('expanded');
-              document.querySelectorAll('#keywords-content tr.row-ad.' + target).forEach(a => a.classList.add('collapsed'));
+              googleEl.querySelectorAll('#keywords-table-wrap tr.row-ad.' + target).forEach(a => a.classList.add('collapsed'));
             } else {
               r.classList.remove('collapsed');
             }
           });
         } else if (target.indexOf('kw-ag-') === 0) {
-          document.querySelectorAll('#keywords-content tr.row-ad.' + target).forEach(r => r.classList.toggle('collapsed', wasExpanded));
+          googleEl.querySelectorAll('#keywords-table-wrap tr.row-ad.' + target).forEach(r => r.classList.toggle('collapsed', wasExpanded));
         }
       });
     });
@@ -2202,7 +2206,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v7 (previews-clickable + pmax + keywords-tab + footer)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v8 (pmax-asset-group-query-fix)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
