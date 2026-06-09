@@ -461,6 +461,28 @@
   }
 
   // ============================================================
+  // META CONVERSION HELPERS (global scope — used by all Meta fetchers)
+  // ============================================================
+  // Sum value of a specific action_type from the actions array Meta returns
+  function actSum(actions, type) {
+    if (!Array.isArray(actions)) return 0;
+    const m = actions.find(a => a.action_type === type);
+    return m ? parseFloat(m.value) : 0;
+  }
+  // Renew Financial conversion = "Registro completado" (complete_registration).
+  // Meta reports the same conversion under multiple action_type variants depending
+  // on attribution path; take the MAX (never sum — avoids double-count).
+  function resultsFromActions(actions) {
+    if (!Array.isArray(actions)) return 0;
+    let max = 0;
+    for (const t of CONFIG.META_CONVERSION_TYPES) {
+      const v = actSum(actions, t);
+      if (v > max) max = v;
+    }
+    return max;
+  }
+
+  // ============================================================
   // DATA FETCHING — Meta + Google
   // ============================================================
   async function fetchMeta(period) {
@@ -490,25 +512,7 @@
       fetch(placeUrl).then(r => r.json()).catch(() => null)
     ]);
 
-    // Helper: sum a specific action type
-    function actSum(actions, type) {
-      if (!Array.isArray(actions)) return 0;
-      const m = actions.find(a => a.action_type === type);
-      return m ? parseFloat(m.value) : 0;
-    }
-    // Renew Financial conversion = "Registro completado" (complete_registration).
-    // Meta may report the same conversion under different action_type variants
-    // (depending on attribution path); take the MAX, never sum (avoids double-count).
-    // No generic fallback: if no variant present, returns 0 (more honest than guessing).
-    function resultsFromActions(actions) {
-      if (!Array.isArray(actions)) return 0;
-      let max = 0;
-      for (const t of CONFIG.META_CONVERSION_TYPES) {
-        const v = actSum(actions, t);
-        if (v > max) max = v;
-      }
-      return max;
-    }
+    // (helpers moved to outer scope so fetchMetaMonthly + fetchMetaHierarchy can use them)
 
     const summary = sumRes?.data?.[0] || {};
     const campaigns = (campRes?.data || []).map(c => ({
@@ -805,11 +809,11 @@
       <div class="section-header">EVOLUCIÓN MENSUAL · ÚLTIMOS ${CONFIG.MONTHLY_LOOKBACK} MESES</div>
       <div class="charts-row">
         <div class="chart-block">
-          <div class="chart-title">Conversiones mes a mes</div>
+          <div class="chart-title">Registros completados mes a mes</div>
           <div class="chart-canvas"><canvas id="chart-meta-conv-monthly"></canvas></div>
         </div>
         <div class="chart-block">
-          <div class="chart-title">CPA mes a mes</div>
+          <div class="chart-title">Costo por registro completado mes a mes</div>
           <div class="chart-canvas"><canvas id="chart-meta-cpa-monthly"></canvas></div>
         </div>
       </div>
@@ -1842,8 +1846,7 @@
 
   // Initial load
   loadAll();
-  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v5 (meta-monthly-sequential)', 'color:#CCFF44;font-weight:700;');
+  console.log('%c[Renew Realtime] · Pointer Marketing Digital · build 2026-06-09-v6 (scope-fix + meta-labels)', 'color:#CCFF44;font-weight:700;');
   </script>
 </body>
 </html>
-
